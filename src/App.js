@@ -60,8 +60,8 @@ function App() {
         }
       })
       .catch((err) => {
-        console.log('Something went wrong!');
-        alert("Something went wrong, can't check.");
+        console.log('This asset does not exist!');
+        alert('This asset does not exist');
       });
   };
 
