@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import * as waxjs from '@waxio/waxjs/dist';
 import 'tailwindcss/tailwind.css';
+import axios from 'axios';
 
 function App() {
   const [userAccount, setUserAccount] = useState('');
   const [publicKey, setPublicKey] = useState('');
   const [error, setError] = useState('');
+  const [authorized, setAuthorized] = useState(false);
+  const [assetId, setAssetId] = useState('');
   useEffect(() => {
     autoLogin();
   }, []);
@@ -18,6 +21,7 @@ function App() {
       let pubKeys = wax.pubKeys;
       setPublicKey(pubKeys[0]);
       setUserAccount(uAccount);
+      setError('');
     } else {
       setError('You are not logged In.');
     }
@@ -30,10 +34,35 @@ function App() {
       let pubKeys = wax.pubKeys;
       setPublicKey(pubKeys[0]);
       setUserAccount(uAccount);
-      setUserAccount(uAccount);
     } catch (e) {
       setError('Failed to login, please try again.');
     }
+  };
+
+  const authorize = async () => {
+    axios
+      .get(
+        `https://test.wax.api.atomicassets.io/atomicassets/v1/assets/${assetId}`
+      )
+      .then((response) => {
+        const data = response.data.data;
+
+        console.log(data);
+        const { authorized_accounts } = data.collection;
+        for (let i = 0; i < authorized_accounts.length; i++) {
+          if (authorized_accounts[i] === 'uAccount') {
+            setAuthorized(true);
+          }
+        }
+
+        if (!authorized) {
+          alert("You're not authorized for this asset.");
+        }
+      })
+      .catch((err) => {
+        console.log('Something went wrong!');
+        alert("Something went wrong, can't check.");
+      });
   };
 
   // const fetchAssets = () => {};
@@ -57,12 +86,23 @@ function App() {
         </button>
       )}
       {publicKey && (
-        <button
-          onClick={() => setError('Coming Soon...')}
-          className="w-64 bg-secondary rounded-xl h-12 hover:bg-hover uppercase text-primary text-xl shadow-xl"
-        >
-          Authenticate
-        </button>
+        <>
+          <input
+            type="text"
+            placeholder="Enter asset id."
+            onChange={(e) => setAssetId(e.target.value)}
+            value={assetId}
+            className="p-3 rounded-lg mb-8"
+          />
+          <button
+            onClick={() => authorize()}
+            className="w-64 bg-secondary rounded-xl h-12 hover:bg-hover uppercase text-primary text-xl shadow-xl"
+          >
+            Authenticate
+          </button>
+
+          {authorized && <p>You are authorized for that asset.</p>}
+        </>
       )}
 
       {error && <p className="mt-12 text-lg text-white">{error}</p>}
