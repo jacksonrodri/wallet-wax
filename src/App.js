@@ -12,9 +12,11 @@ function App() {
   const [authorized, setAuthorized] = useState(false);
   const [assetId, setAssetId] = useState('');
   const [token, setToken] = useState('');
+  const [test, setTest] = useState('');
+
   useEffect(() => {
     autoLogin();
-  }, []);
+  }, [test]);
 
   const autoLogin = async () => {
     const wax = new waxjs.WaxJS('https://wax.greymass.com', null, null, false);
