@@ -3,12 +3,15 @@ import * as waxjs from '@waxio/waxjs/dist';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 
+const baseURL = 'https://nft-story-server.herokuapp.com';
+
 function App() {
   const [userAccount, setUserAccount] = useState('');
   const [publicKey, setPublicKey] = useState('');
   const [error, setError] = useState('');
   const [authorized, setAuthorized] = useState(false);
   const [assetId, setAssetId] = useState('');
+  const [token, setToken] = useState('');
   useEffect(() => {
     autoLogin();
   }, []);
@@ -19,9 +22,8 @@ function App() {
     if (isAutoLoginAvailable) {
       let uAccount = wax.userAccount;
       let pubKeys = wax.pubKeys;
-      setPublicKey(pubKeys[0]);
-      setUserAccount(uAccount);
       setError('');
+      authenticate(uAccount, pubKeys[0]);
     } else {
       setError('You are not logged In.');
     }
@@ -32,36 +34,73 @@ function App() {
     try {
       let uAccount = await wax.login();
       let pubKeys = wax.pubKeys;
-      setPublicKey(pubKeys[0]);
-      setUserAccount(uAccount);
+
+      authenticate(uAccount, pubKeys[0]);
     } catch (e) {
       setError('Failed to login, please try again.');
     }
   };
 
-  const authorize = async () => {
+  const authenticate = async (username, publicKey) => {
     axios
-      .get(
-        `https://test.wax.api.atomicassets.io/atomicassets/v1/assets/${assetId}`
-      )
-      .then((response) => {
-        const data = response.data.data;
-
-        console.log(data);
-        const { authorized_accounts } = data.collection;
-        for (let i = 0; i < authorized_accounts.length; i++) {
-          if (authorized_accounts[i] === 'uAccount') {
-            setAuthorized(true);
-          }
-        }
-
-        if (!authorized) {
-          alert("You're not authorized for this asset.");
-        }
+      .post(`${baseURL}/authenticate`, {
+        username,
+        publicKey,
       })
-      .catch((err) => {
-        console.log('This asset does not exist!');
-        alert('This asset does not exist');
+      .then((response) => {
+        setToken(response.data.token);
+        setPublicKey(publicKey);
+        setUserAccount(username);
+      })
+      .catch(() => {
+        setError('Failed to login, please try again.');
+      });
+  };
+
+  const authorize = async () => {
+    // axios
+    //   .get(
+    //     `https://test.wax.api.atomicassets.io/atomicassets/v1/assets/${assetId}`
+    //   )
+    //   .then((response) => {
+    //     const data = response.data.data;
+
+    //     console.log(data);
+    //     const { authorized_accounts } = data.collection;
+    //     for (let i = 0; i < authorized_accounts.length; i++) {
+    //       if (authorized_accounts[i] === 'uAccount') {
+    //         setAuthorized(true);
+    //       }
+    //     }
+
+    //     if (!authorized) {
+    //       alert("You're not authorized for this asset.");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log('This asset does not exist!');
+    //     alert('This asset does not exist');
+    //   });
+
+    axios
+      .get(`${baseURL}/authorize?assetId=${assetId}`, {
+        headers: {
+          authorization: token,
+        },
+      })
+      .then((response) => {
+        const { status } = response.data;
+        if (status === 401) {
+          alert('You are not authorized to access this asset.');
+        }
+
+        if (status === 404) {
+          alert('This asset does not exist.');
+        }
+
+        if (status === 200) {
+          setAuthorized(true);
+        }
       });
   };
 
@@ -72,12 +111,14 @@ function App() {
         NFT Story Cards
       </h1>
 
-      <div className="text-white text-center text-lg mb-12">
-        {publicKey && <p className="mb-4">PUBLIC KEY: {publicKey}</p>}
-        {userAccount && <p>USER ACCOUNT: {userAccount}</p>}
-      </div>
+      {token && (
+        <div className="text-white text-center text-lg mb-12">
+          {publicKey && <p className="mb-4">PUBLIC KEY: {publicKey}</p>}
+          {userAccount && <p>USER ACCOUNT: {userAccount}</p>}
+        </div>
+      )}
 
-      {!publicKey && (
+      {!token && (
         <button
           onClick={() => login()}
           className="w-64 bg-secondary rounded-xl h-12 hover:bg-hover uppercase text-primary text-xl shadow-xl"
@@ -85,7 +126,7 @@ function App() {
           Login
         </button>
       )}
-      {publicKey && (
+      {token && (
         <>
           <input
             type="text"
