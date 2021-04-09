@@ -3,7 +3,7 @@ import * as waxjs from '@waxio/waxjs/dist';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 
-const baseURL = 'https://nft-story-server.herokuapp.com';
+const baseURL = 'http://139.59.21.247';
 
 function App() {
   const [userAccount, setUserAccount] = useState('');
