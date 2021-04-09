@@ -43,66 +43,64 @@ function App() {
   };
 
   const authenticate = async (username, publicKey) => {
-    axios
-      .post(`${baseURL}/authenticate`, {
-        username,
-        publicKey,
-      })
-      .then((response) => {
-        setToken(response.data.token);
-        setPublicKey(publicKey);
-        setUserAccount(username);
-      })
-      .catch(() => {
-        setError('Failed to login, please try again.');
-      });
+    // axios
+    //   .post(`${baseURL}/authenticate`, {
+    //     username,
+    //     publicKey,
+    //   })
+    //   .then((response) => {
+    // setToken(response.data.token);
+    setPublicKey(publicKey);
+    setUserAccount(username);
+    // })
+    // .catch(() => {
+    //   setError('Failed to login, please try again.');
+    // });
   };
   //
   const authorize = async () => {
-    // axios
-    //   .get(
-    //     `https://test.wax.api.atomicassets.io/atomicassets/v1/assets/${assetId}`
-    //   )
-    //   .then((response) => {
-    //     const data = response.data.data;
-
-    //     console.log(data);
-    //     const { authorized_accounts } = data.collection;
-    //     for (let i = 0; i < authorized_accounts.length; i++) {
-    //       if (authorized_accounts[i] === 'uAccount') {
-    //         setAuthorized(true);
-    //       }
-    //     }
-
-    //     if (!authorized) {
-    //       alert("You're not authorized for this asset.");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log('This asset does not exist!');
-    //     alert('This asset does not exist');
-    //   });
-
     axios
-      .get(`${baseURL}/authorize?assetId=${assetId}`, {
-        headers: {
-          authorization: token,
-        },
-      })
+      .get(`https://wax.api.atomicassets.io/atomicassets/v1/assets/${assetId}`)
       .then((response) => {
-        const { status } = response.data;
-        if (status === 401) {
-          alert('You are not authorized to access this asset.');
+        const data = response.data.data;
+
+        console.log(data);
+        const { authorized_accounts } = data.collection;
+        for (let i = 0; i < authorized_accounts.length; i++) {
+          if (authorized_accounts[i] === 'uAccount') {
+            setAuthorized(true);
+          }
         }
 
-        if (status === 404) {
-          alert('This asset does not exist.');
+        if (!authorized) {
+          alert("You're not authorized for this asset.");
         }
-
-        if (status === 200) {
-          setAuthorized(true);
-        }
+      })
+      .catch((err) => {
+        console.log('This asset does not exist!');
+        alert('This asset does not exist');
       });
+
+    // axios
+    //   .get(`${baseURL}/authorize?assetId=${assetId}`, {
+    //     headers: {
+    //       authorization: token,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     const { status } = response.data;
+    //     if (status === 401) {
+    //       alert('You are not authorized to access this asset.');
+    //     }
+
+    //     if (status === 404) {
+    //       alert('This asset does not exist.');
+    //     }
+
+    //     if (status === 200) {
+    //       setAuthorized(true);
+    //     }
+    //   });
   };
 
   // const fetchAssets = () => {};
@@ -112,14 +110,14 @@ function App() {
         NFT Story Cards
       </h1>
 
-      {token && (
-        <div className="text-white text-center text-lg mb-12">
-          {publicKey && <p className="mb-4">PUBLIC KEY: {publicKey}</p>}
-          {userAccount && <p>USER ACCOUNT: {userAccount}</p>}
-        </div>
-      )}
+      {/* {token && ( */}
+      <div className="text-white text-center text-lg mb-12">
+        {publicKey && <p className="mb-4">PUBLIC KEY: {publicKey}</p>}
+        {userAccount && <p>USER ACCOUNT: {userAccount}</p>}
+      </div>
+      {/* )} */}
 
-      {!token && (
+      {!publicKey && (
         <button
           onClick={() => login()}
           className="w-64 bg-secondary rounded-xl h-12 hover:bg-hover uppercase text-primary text-xl shadow-xl"
@@ -127,7 +125,7 @@ function App() {
           Login
         </button>
       )}
-      {token && (
+      {publicKey && (
         <>
           <input
             type="text"
