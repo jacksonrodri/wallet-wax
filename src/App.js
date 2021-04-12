@@ -160,7 +160,7 @@ function App() {
             {ownerInfo &&
               ownerInfo.map((info) => (
                 <>
-                  <p>{info.asset_id}</p>
+                  <p className="text-white">Asset ID: {info.asset_id}</p>
                   <br />
                 </>
               ))}
