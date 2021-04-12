@@ -3,7 +3,7 @@ import * as waxjs from '@waxio/waxjs/dist';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 
-// const baseURL = 'http://139.59.21.247';
+const baseURL = 'https://139.59.44.5:8080';
 
 function App() {
   const [userAccount, setUserAccount] = useState('');
@@ -11,7 +11,8 @@ function App() {
   const [error, setError] = useState('');
   const [authorized, setAuthorized] = useState(false);
   const [assetId, setAssetId] = useState('');
-  // const [token, setToken] = useState('');
+  const [token, setToken] = useState('');
+  const [ownerInfo, setOwnerInfo] = useState('');
 
   useEffect(() => {
     autoLogin();
@@ -43,19 +44,19 @@ function App() {
   };
 
   const authenticate = async (username, publicKey) => {
-    // axios
-    //   .post(`${baseURL}/authenticate`, {
-    //     username,
-    //     publicKey,
-    //   })
-    //   .then((response) => {
-    // setToken(response.data.token);
-    setPublicKey(publicKey);
-    setUserAccount(username);
-    // })
-    // .catch(() => {
-    //   setError('Failed to login, please try again.');
-    // });
+    axios
+      .post(`${baseURL}/authenticate`, {
+        username,
+        publicKey,
+      })
+      .then((response) => {
+        setToken(response.data.token);
+        setPublicKey(publicKey);
+        setUserAccount(username);
+      })
+      .catch(() => {
+        setError('Failed to login, please try again.');
+      });
   };
   //
   const authorize = async () => {
