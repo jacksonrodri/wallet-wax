@@ -3,7 +3,7 @@ import * as waxjs from '@waxio/waxjs/dist';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 
-const baseURL = 'https://139.59.44.5:8080';
+// const baseURL = 'https://139.59.44.5:8080';
 
 function App() {
   const [userAccount, setUserAccount] = useState('');
@@ -11,8 +11,9 @@ function App() {
   const [error, setError] = useState('');
   const [authorized, setAuthorized] = useState(false);
   const [assetId, setAssetId] = useState('');
-  const [token, setToken] = useState('');
+  // const [token, setToken] = useState('');
   const [ownerInfo, setOwnerInfo] = useState('');
+  const [ownerName, setOwnerName] = useState('');
 
   useEffect(() => {
     autoLogin();
@@ -44,18 +45,30 @@ function App() {
   };
 
   const authenticate = async (username, publicKey) => {
+    // axios
+    //   .post(`${baseURL}/authenticate`, {
+    //     username,
+    //     publicKey,
+    //   })
+    //   .then((response) => {
+    // setToken(response.data.token);
+    setPublicKey(publicKey);
+    setUserAccount(username);
+    // })
+    // .catch(() => {
+    //   setError('Failed to login, please try again.');
+    // });
+  };
+
+  const findAssets = async () => {
     axios
-      .post(`${baseURL}/authenticate`, {
-        username,
-        publicKey,
-      })
+      .get(
+        `https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${ownerName}&page=1&limit=1&order=desc&sort=asset_id`
+      )
       .then((response) => {
-        setToken(response.data.token);
-        setPublicKey(publicKey);
-        setUserAccount(username);
-      })
-      .catch(() => {
-        setError('Failed to login, please try again.');
+        const data = response.data.data;
+
+        setOwnerInfo(data);
       });
   };
   //
@@ -128,21 +141,48 @@ function App() {
       )}
       {publicKey && (
         <>
-          <input
-            type="text"
-            placeholder="Enter asset id."
-            onChange={(e) => setAssetId(e.target.value)}
-            value={assetId}
-            className="p-3 rounded-lg mb-8"
-          />
-          <button
-            onClick={() => authorize()}
-            className="w-64 bg-secondary rounded-xl h-12 hover:bg-hover uppercase text-primary text-xl shadow-xl"
-          >
-            Authenticate
-          </button>
-
-          {authorized && <p>You are authorized for that asset.</p>}
+          <div>
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Enter Author name."
+                onChange={(e) => setOwnerName(e.target.value)}
+                value={ownerName}
+                className="p-3 rounded-lg mb-8"
+              />
+              <button
+                onClick={() => findAssets()}
+                className="w-64 bg-secondary rounded-xl h-12 hover:bg-hover uppercase text-primary text-xl shadow-xl"
+              >
+                Find assets
+              </button>
+            </div>
+            {ownerInfo &&
+              ownerInfo.map((info) => (
+                <>
+                  <p>{info.asset_id}</p>
+                  <br />
+                </>
+              ))}
+          </div>
+          <div>
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Enter asset id."
+                onChange={(e) => setAssetId(e.target.value)}
+                value={assetId}
+                className="p-3 rounded-lg mb-8"
+              />
+              <button
+                onClick={() => authorize()}
+                className="w-64 bg-secondary rounded-xl h-12 hover:bg-hover uppercase text-primary text-xl shadow-xl"
+              >
+                Authenticate
+              </button>
+            </div>
+            {authorized && <p>You are authorized for that asset.</p>}
+          </div>
         </>
       )}
 
