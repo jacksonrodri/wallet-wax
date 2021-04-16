@@ -152,6 +152,7 @@ function Home() {
                 setOwnerInfo('');
                 setUserAccount('');
                 setPublicKey('');
+                setToken('');
               }}
               style={{ backgroundColor: '#CD845B' }}
               className="px-8 py-4 text-white rounded-md shadow-xl uppercase mb-20"
