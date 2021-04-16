@@ -16,7 +16,7 @@ function Home() {
 
   useEffect(() => {
     autoLogin();
-  }, []);
+  });
 
   const autoLogin = async () => {
     const wax = new waxjs.WaxJS('https://wax.greymass.com', null, null, false);
