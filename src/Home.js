@@ -25,6 +25,8 @@ function Home() {
       let uAccount = wax.userAccount;
       let pubKeys = wax.pubKeys;
       setError('');
+
+      console.log(error, authorized, assetId, ownerInfo);
       authenticate(uAccount, pubKeys[0]);
     } else {
       setError('You are not logged In.');
@@ -46,7 +48,9 @@ function Home() {
   const authenticate = async (username, publicKey) => {
     setPublicKey(publicKey);
     setUserAccount(username);
-    setOwnerInfo(username);
+    setOwnerName(username);
+    setAuthorized(true);
+    setAssetId('123');
     setToken('123');
     findAssets();
   };
@@ -112,13 +116,17 @@ function Home() {
                       border: '2px solid #965937',
                     }}
                   >
-                    <img src={item.image} className="w-60 h-60 rounded-xl" />
+                    <img
+                      src={item.image}
+                      className="w-60 h-60 rounded-xl"
+                      alt=""
+                    />
                     <div className="p-5">
                       <div className="flex justify-between">
                         <h5 className="uppercase text-gray-200 text-xs">
                           owner
                         </h5>
-                        <p className="text-xs uppercase text-green-300 text-secondary font-bold">
+                        <p className="text-xs uppercase text-secondary font-bold">
                           Authorized
                         </p>
                       </div>
