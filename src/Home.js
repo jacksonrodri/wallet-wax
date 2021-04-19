@@ -2,12 +2,32 @@ import React, { useState, useEffect } from 'react';
 import * as waxjs from '@waxio/waxjs/dist';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
+import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from 'react-dom';
+
+const stories = [
+  {
+    url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
+    assetIds: '1099523918174,1099521783773',
+    name: 'The cost of magic',
+  },
+  {
+    url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
+    assetIds: '1099523919644,1099523919938',
+    name: 'The sentinel of castle Margoron',
+  },
+  {
+    url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
+    assetIds: '1099520827921,1099523920440',
+    name: 'Choose Wisely',
+  },
+];
 
 function Home() {
   const [userAccount, setUserAccount] = useState('');
   const [publicKey, setPublicKey] = useState('');
   const [error, setError] = useState('');
   const [authorized, setAuthorized] = useState(false);
+  const [authorizationStatus, setAuthorizationStatus] = useState('');
   const [assetId, setAssetId] = useState('');
   const [ownerInfo, setOwnerInfo] = useState('');
   const [ownerName, setOwnerName] = useState('');
@@ -56,24 +76,63 @@ function Home() {
   };
 
   const findAssets = async (e) => {
-    // e.preventDefault();
-    axios
+    // const data = JSON.parse(e.target.value);
+
+    let s = [];
+    console.log('starting promise');
+    // const a = await Promise.all(
+    //   assets.map(async (asset) => {
+    //     console.log('Getting data');
+    //     const assetAuthorized = await handleAssetAuthorization(asset.assetIds);
+    //     console.log('End Getting data');
+    //     if (assetAuthorized) {
+    //       s.push(asset.story);
+    //     }
+    //   })
+    // );
+
+    console.log('ending promise');
+    if (s.length === 0) {
+      setAuthorizationStatus('not_authorized');
+    }
+    // setStories(stories);
+  };
+
+  const handleAssetAuthorization = async (assetIds) => {
+    await axios
       .get(
-        `https://wax.api.atomicassets.io/atomicassets/v1/schemas?authorized_account=${ownerName}&page=1&limit=10&order=desc&sort=created`
+        `https://wax.api.atomicassets.io/atomicassets/v1/assets?authorized_account=${ownerName}&ids=${assetIds}&page=1&limit=100&order=desc&sort=asset_id`
       )
       .then((response) => {
         const data = response.data.data;
 
-        let arr = [];
+        if (data.length > 0) {
+          // setStory(data.story);
 
-        data.forEach((item) => {
-          arr.push({
-            image: 'https://ipfs.atomichub.io/ipfs/' + item.collection.img,
-            ownedBy: item.collection.author,
-          });
-        });
+          return true;
+        } else {
+          // setAuthorizationStatus('not_authorized');
+          return false;
+        }
+      });
+  };
 
-        setNftsList(arr);
+  const authorizeStory = async (assetIds, url) => {
+    await axios
+      .get(
+        `https://wax.api.atomicassets.io/atomicassets/v1/assets?authorized_account=${ownerName}&ids=${assetIds}&page=1&limit=100&order=desc&sort=asset_id`
+      )
+      .then((response) => {
+        const data = response.data.data;
+
+        if (data.length > 0) {
+          // setStory(data.story);
+          window.open(url, '_blank');
+        } else {
+          // setAuthorizationStatus('not_authorized');
+          // return false;
+          alert('You are not authorized to view that story.');
+        }
       });
   };
 
@@ -82,8 +141,8 @@ function Home() {
       <div className="w-9/12 py-8 px-12 flex flex-col">
         <div className="mb-24 flex justify-between">
           <h1 className="text-white uppercase text-xl">NFT Story Cards</h1>
-          {/* <form onSubmit={(e) => findAssets(e)}>
-            <input
+          <form onSubmit={findAssets}>
+            {/* <input
               placeholder="owner name"
               className="py-2 px-4 rounded-l-lg"
               value={ownerName}
@@ -94,8 +153,23 @@ function Home() {
               style={{ backgroundColor: '#965937' }}
             >
               Find
-            </button>
-          </form> */}
+            </button> */}
+
+            {/* <select onChange={(e) => findAssets(e)}>
+              {assets.map((asset) => {
+                return (
+                  <option
+                    value={JSON.stringify({
+                      ids: asset.assetIds,
+                      story: asset.story,
+                    })}
+                  >
+                    {asset.assetIds}
+                  </option>
+                );
+              })}
+            </select> */}
+          </form>
         </div>
         <div className="flex justify-center">
           <div className="w-8/12 flex flex-col items-center">
@@ -106,7 +180,13 @@ function Home() {
             {!token && (
               <p className="text-white mt-12">Please login to continue.</p>
             )}
+
             {token && (
+              <p className="text-white mt-6">
+                Please select a story to continue.
+              </p>
+            )}
+            {/* {token && (
               <div className="flex justify-center mt-12 flex-wrap">
                 {nftsList.map((item) => (
                   <div
@@ -135,7 +215,25 @@ function Home() {
                   </div>
                 ))}
               </div>
-            )}
+            )} */}
+
+            {/* {authorizationStatus === 'not_authorized' && (
+              <p className="text-white mt-12">
+                Sorry, you're not authorized to view any stories.
+              </p>
+            )} */}
+            {token &&
+              stories.map((story) => {
+                return (
+                  <p
+                    className="mt-24 cursor-pointer text-2xl uppercase"
+                    style={{ color: '#CD845B' }}
+                    onClick={() => authorizeStory(story.assetIds, story.url)}
+                  >
+                    {story.name}
+                  </p>
+                );
+              })}
           </div>
         </div>
       </div>
