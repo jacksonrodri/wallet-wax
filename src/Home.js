@@ -8,16 +8,22 @@ const stories = [
     url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
     assetIds: '1099523918174,1099521783773',
     name: 'The cost of magic',
+    image:
+      'http://worksofnick.com/wp-content/uploads/2018/11/pizza_box_1542320196.jpg',
   },
   {
     url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
     assetIds: '1099523919644,1099523919938',
     name: 'The sentinel of castle Margoron',
+    image:
+      'http://worksofnick.com/wp-content/uploads/2018/01/castle_sea_1516308535.jpg',
   },
   {
     url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
     assetIds: '1099520827921,1099523920440',
     name: 'Choose Wisely',
+    image:
+      'http://worksofnick.com/wp-content/uploads/2018/01/castle_sea_1516308535.jpg',
   },
 ];
 
@@ -114,13 +120,35 @@ function Home() {
             {token &&
               stories.map((story) => {
                 return (
-                  <p
-                    className="mt-24 cursor-pointer text-2xl uppercase"
-                    style={{ color: '#CD845B' }}
+                  <div
+                    className="mx-3 mt-12 rounded-xl cursor-pointer"
+                    style={{
+                      backgroundColor: '#965937',
+                      border: '2px solid #965937',
+                    }}
                     onClick={() => authorizeStory(story.assetIds, story.url)}
                   >
-                    {story.name}
-                  </p>
+                    <img
+                      src={story.image}
+                      className="w-96 h-96 rounded-xl"
+                      alt={story.name}
+                    />
+                    <div className="p-5">
+                      <div className="flex justify-between">
+                        <h5 className="uppercase text-gray-200 text-md">
+                          {story.name}
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+
+                  // <p
+                  //   className="mt-24 cursor-pointer text-2xl uppercase"
+                  //   style={{ color: '#CD845B' }}
+                  //   onClick={() => authorizeStory(story.assetIds, story.url)}
+                  // >
+                  //   {story.name}
+                  // </p>
                 );
               })}
           </div>
