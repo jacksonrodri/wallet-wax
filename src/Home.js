@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import * as waxjs from '@waxio/waxjs/dist';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
-import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from 'react-dom';
 
 const stories = [
   {
@@ -27,11 +26,9 @@ function Home() {
   const [publicKey, setPublicKey] = useState('');
   const [error, setError] = useState('');
   const [authorized, setAuthorized] = useState(false);
-  const [authorizationStatus, setAuthorizationStatus] = useState('');
   const [assetId, setAssetId] = useState('');
   const [ownerInfo, setOwnerInfo] = useState('');
   const [ownerName, setOwnerName] = useState('');
-  const [nftsList, setNftsList] = useState([]);
   const [token, setToken] = useState('');
 
   useEffect(() => {
@@ -72,49 +69,6 @@ function Home() {
     setAuthorized(true);
     setAssetId('123');
     setToken('123');
-    findAssets();
-  };
-
-  const findAssets = async (e) => {
-    // const data = JSON.parse(e.target.value);
-
-    let s = [];
-    console.log('starting promise');
-    // const a = await Promise.all(
-    //   assets.map(async (asset) => {
-    //     console.log('Getting data');
-    //     const assetAuthorized = await handleAssetAuthorization(asset.assetIds);
-    //     console.log('End Getting data');
-    //     if (assetAuthorized) {
-    //       s.push(asset.story);
-    //     }
-    //   })
-    // );
-
-    console.log('ending promise');
-    if (s.length === 0) {
-      setAuthorizationStatus('not_authorized');
-    }
-    // setStories(stories);
-  };
-
-  const handleAssetAuthorization = async (assetIds) => {
-    await axios
-      .get(
-        `https://wax.api.atomicassets.io/atomicassets/v1/assets?authorized_account=${ownerName}&ids=${assetIds}&page=1&limit=100&order=desc&sort=asset_id`
-      )
-      .then((response) => {
-        const data = response.data.data;
-
-        if (data.length > 0) {
-          // setStory(data.story);
-
-          return true;
-        } else {
-          // setAuthorizationStatus('not_authorized');
-          return false;
-        }
-      });
   };
 
   const authorizeStory = async (assetIds, url) => {
@@ -141,35 +95,6 @@ function Home() {
       <div className="w-9/12 py-8 px-12 flex flex-col">
         <div className="mb-24 flex justify-between">
           <h1 className="text-white uppercase text-xl">NFT Story Cards</h1>
-          <form onSubmit={findAssets}>
-            {/* <input
-              placeholder="owner name"
-              className="py-2 px-4 rounded-l-lg"
-              value={ownerName}
-              onChange={(e) => setOwnerName(e.target.value)}
-            />
-            <button
-              className="rounded-r-lg h-full px-6 text-white uppercase"
-              style={{ backgroundColor: '#965937' }}
-            >
-              Find
-            </button> */}
-
-            {/* <select onChange={(e) => findAssets(e)}>
-              {assets.map((asset) => {
-                return (
-                  <option
-                    value={JSON.stringify({
-                      ids: asset.assetIds,
-                      story: asset.story,
-                    })}
-                  >
-                    {asset.assetIds}
-                  </option>
-                );
-              })}
-            </select> */}
-          </form>
         </div>
         <div className="flex justify-center">
           <div className="w-8/12 flex flex-col items-center">
@@ -186,42 +111,6 @@ function Home() {
                 Please select a story to continue.
               </p>
             )}
-            {/* {token && (
-              <div className="flex justify-center mt-12 flex-wrap">
-                {nftsList.map((item) => (
-                  <div
-                    className="mx-3 mt-12 rounded-xl"
-                    style={{
-                      backgroundColor: '#965937',
-                      border: '2px solid #965937',
-                    }}
-                  >
-                    <img
-                      src={item.image}
-                      className="w-60 h-60 rounded-xl"
-                      alt=""
-                    />
-                    <div className="p-5">
-                      <div className="flex justify-between">
-                        <h5 className="uppercase text-gray-200 text-xs">
-                          owner
-                        </h5>
-                        <p className="text-xs uppercase text-secondary font-bold">
-                          Authorized
-                        </p>
-                      </div>
-                      <p className="text-lg text-white mt-2">{item.ownedBy}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )} */}
-
-            {/* {authorizationStatus === 'not_authorized' && (
-              <p className="text-white mt-12">
-                Sorry, you're not authorized to view any stories.
-              </p>
-            )} */}
             {token &&
               stories.map((story) => {
                 return (
