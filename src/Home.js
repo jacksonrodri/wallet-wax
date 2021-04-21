@@ -103,7 +103,7 @@ function Home() {
       .get(
         `https://wax.api.atomicassets.io/atomicassets/v1/assets?authorized_account=${ownerName}&ids=${assetIds}&page=1&limit=100&order=desc&sort=asset_id`
       )
-      .then((response) => {
+      .then(async (response) => {
         const data = response.data.data;
 
         if (data.length > 0) {
@@ -112,7 +112,19 @@ function Home() {
         } else {
           // setAuthorizationStatus('not_authorized');
           // return false;
-          alert('You are not authorized to view that story.');
+
+          await axios
+            .get(
+              `https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${ownerName}&ids=${assetIds}&page=1&limit=100&order=desc&sort=asset_id`
+            )
+            .then((resp) => {
+              const d = resp.data.data;
+              if (d.length > 0) {
+                window.open(url, '_blank');
+              } else {
+                alert('You are not authorized to view that story.');
+              }
+            });
         }
       });
   };
