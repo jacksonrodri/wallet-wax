@@ -7,7 +7,9 @@ import {
   Switch,
 } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
+
 import AuthenticationContext from './components/context/Authentication';
+import ModalContext from './components/context/Modal';
 
 import Login from './pages/Login';
 import Stories from './pages/Stories';
@@ -75,4 +77,9 @@ const MyApp = () => {
   );
 };
 
-ReactDOM.render(<MyApp />, document.getElementById('root'));
+ReactDOM.render(
+  <ModalContext.Provider>
+    <MyApp />
+  </ModalContext.Provider>,
+  document.getElementById('root')
+);

@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import AuthenticationContext from './context/Authentication';
 
 const DashboardLayout = ({ children }) => {
   const { userAccount, logout } = useContext(AuthenticationContext);
   const history = useHistory();
+  const location = useLocation();
 
   return (
     <div>
@@ -13,14 +14,18 @@ const DashboardLayout = ({ children }) => {
         <nav>
           <ul className="flex uppercase text-white text-2xl">
             <li
-              className="mr-40 cursor-pointer"
+              className={`mr-40 cursor-pointer ${
+                location.pathname === '/' && 'border-b border-white'
+              }`}
               onClick={() => history.push('/')}
             >
               Home
             </li>
             <li
               onClick={() => history.push('/assets')}
-              className="cursor-pointer"
+              className={`cursor-pointer ${
+                location.pathname === '/assets' && 'border-b border-white'
+              }`}
             >
               My Assets
             </li>
