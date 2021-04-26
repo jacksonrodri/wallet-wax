@@ -21,7 +21,7 @@ const stories = [
     assetIds: '1099520827921,1099523920440',
     name: 'Choose Wisely',
     image:
-      'https://ipfs.atomichub.io/ipfs/QmTizf995JGRaWijyPRXPQsmiwxRyjJsLqQuE3MoniB4hs',
+      'https://ipfs.atomichub.io/ipfs/QmeUc3zvUR1vRP676Kuy1YZskWTX2Eusht3Z9NUo5k48ne/Common/Base%20Fronts/topps_series1_base_cin_brian_goodwin.jpg',
   },
   {
     url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
