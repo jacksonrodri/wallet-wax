@@ -140,6 +140,11 @@ const Stories = () => {
             );
           })}
         </div>
+        <div className="flex justify-center">
+          <button className="text-white uppercase text-center cursor-pointer bg-secondary rounded-lg px-6 py-3 focus:outline-none">
+            View More
+          </button>
+        </div>
       </div>
     </>
   );
