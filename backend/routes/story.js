@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 const Story = require('../models/stories');
 const jwt = require('jsonwebtoken');
-
 const multer = require('multer')
+
+const { spawn } = require("child_process")
 
 
 router.post('/login', async(req, res)=>{
@@ -16,18 +17,26 @@ router.post('/login', async(req, res)=>{
 	}
 });
 
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
 
-router.get('/assets', async (req, res) => {
+router.get('/assets/:name', async (req, res) => {
 	try {
-		const {authorization} = req.headers;
-		const {username} = jwt.verify(authorization, 'secret');
+		// const {authorization} = req.headers;
+		// const {username} = jwt.verify(authorization, 'secret');
 
+		var username = req.params.name
+
+		var dataToSend;
+		const python = spawn('python', ['Get_User_Assets.py', username])
+
+		python.stdout.on('data', function(data){
+			console.log('Pipe data from python script....')
+			dataToSend = data.toString();
+		})
+
+		python.on('close', ()=>{
+			res.status(200).json(dataToSend)
+		})
 		
-
 	}catch(err) {
 		res.status(500).send("Error", err);
 	}
