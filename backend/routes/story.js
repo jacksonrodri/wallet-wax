@@ -23,16 +23,21 @@ router.get('/assets', async (req, res) => {
 		const {authorization} = req.headers;
 		const {username} = jwt.verify(authorization, 'secret');
 
-		var dataToSend;
+		var assetsData;
+		var Assets
 		const python = spawn('python', ['./Python/Get_User_Assets.py', username])
 
 		python.stdout.on('data', function(data){
 			console.log('Pipe data from python script....')
-			dataToSend = data.toString();
+			assetsData = data.toString();
+			
+			// Add Regex to get only asset numbers
+			var assetId = /\d+/g
+			Assets = assetsData.match(assetId)
 		})
 
 		python.on('close', ()=>{
-			res.status(200).json(dataToSend)
+			res.status(200).json(Assets)
 		})
 		
 	}catch(err) {
