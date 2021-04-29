@@ -17,14 +17,14 @@ router.post('/login', async(req, res)=>{
 	}
 });
 
-
+// Get Assets by User name
 router.get('/assets', async (req, res) => {
 	try {
 		const {authorization} = req.headers;
 		const {username} = jwt.verify(authorization, 'secret');
 
 		var dataToSend;
-		const python = spawn('python', ['Get_User_Assets.py', username])
+		const python = spawn('python', ['./Python/Get_User_Assets.py', username])
 
 		python.stdout.on('data', function(data){
 			console.log('Pipe data from python script....')
@@ -40,6 +40,30 @@ router.get('/assets', async (req, res) => {
 	}
 });
 
+// Get Image of Assest
+router.get('/assetsImage', (req, res)=>{
+	try{
+		const {authorization} = req.headers;
+		const {assetsImage} = jwt.verify(authorization, 'secret');
+		// var assetsImage = req.params.id
+		const python = spawn('python', ['./Python/Get_Asset_image.py', assetsImage])
+
+		var img
+		python.stdout.on('data', function(data){
+			img = data.toString()
+		})
+
+		python.on('close', (code)=>{
+			console.log(`child process close all stdio with code ${code}`)
+			// res.send(img)
+			res.status(200).json(img)
+
+		})
+	}catch(err) {
+		res.status(500).send("Error", err);
+	}
+	
+})
 
 // Get all Stories
 router.get('/', async(req, res)=>{
