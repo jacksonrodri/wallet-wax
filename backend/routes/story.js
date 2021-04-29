@@ -18,12 +18,10 @@ router.post('/login', async(req, res)=>{
 });
 
 
-router.get('/assets/:name', async (req, res) => {
+router.get('/assets', async (req, res) => {
 	try {
-		// const {authorization} = req.headers;
-		// const {username} = jwt.verify(authorization, 'secret');
-
-		var username = req.params.name
+		const {authorization} = req.headers;
+		const {username} = jwt.verify(authorization, 'secret');
 
 		var dataToSend;
 		const python = spawn('python', ['Get_User_Assets.py', username])
