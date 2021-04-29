@@ -1,13 +1,37 @@
 var express = require('express');
 var router = express.Router();
-const Story = require('../models/stories')
+const Story = require('../models/stories');
+const jwt = require('jsonwebtoken');
 
 const multer = require('multer')
+
+
+router.post('/login', async(req, res)=>{
+	try{
+		const { username } = req.body;
+		const token = jwt.sign({username}, 'secret', { expiresIn: '365d' });
+		res.status(200).json({token});
+	}catch(err){
+		res.send("Error", err)
+	}
+});
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
 // });
+
+router.get('/assets', async (req, res) => {
+	try {
+		const {authorization} = req.headers;
+		const {username} = jwt.verify(authorization, 'secret');
+
+		
+
+	}catch(err) {
+		res.status(500).send("Error", err);
+	}
+});
 
 
 // Get all Stories
@@ -19,20 +43,6 @@ router.get('/', async(req, res)=>{
 		res.send("Error", err)
 	}
 })
-
-// router.post('/', async(req, res)=>{
-// 	const newStory = new Story({
-//     name: req.body.name,
-//     content: req.body.content,
-//     NFT_Assets: req.body.NFT_Assets
-//   })
-//   try{
-// 		const S = await newStory.save()
-//       res.json(S)
-// 	}catch(err){
-// 		res.send("Error", err)
-// 	}
-// })
 
 // Insert New Story
 
