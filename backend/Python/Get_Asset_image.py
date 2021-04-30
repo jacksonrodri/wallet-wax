@@ -11,6 +11,6 @@ def getAssets():
 
     temp2 = assetsImage[0]
 
-    print(temp2[:-4])
+    print(temp2)
 
 getAssets()
