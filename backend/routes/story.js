@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer')
 const axios = require('axios').default;
 
-const { spawn } = require("child_process")
+const { spawn } = require("child_process");
+const { response } = require('../app');
 
 
 router.post('/login', async(req, res)=>{
@@ -18,102 +19,38 @@ router.post('/login', async(req, res)=>{
 	}
 });
 
-// Get Assets by User name Using Python
-// router.get('/assets/:name', async (req, res) => {
-// 	try {
-// 		// const {authorization} = req.headers;
-// 		// const {username} = jwt.verify(authorization, 'secret');
-
-// 		const username = req.params.name
-
-// 		var assetsData;
-// 		var Assets
-// 		var rawData
-// 		const python = spawn('python', ['./Python/Get_User_Assets.py', username])
-
-// 		python.stdout.on('data', function(data){
-// 			console.log('Pipe data from python script....')
-// 			assetsData = data.toString();
-			
-// 			// Add Regex to get only asset numbers
-// 			var assetId = /\d+/g
-// 			Assets = assetsData.match(assetId)
-// 		})
-// 		python.on('close', ()=>{
-// 			console.log(`Assets of ${username} `,Assets)
-// 			// assetsId = Assets[0]
-// 			// console.log(assetsId)
-// 			var i
-// 			for (i = 0; i < Assets.length; i++){
-// 				console.log(i)
-// 				id = Assets[i]
-// 				console.log(id)
-
-// 				const python2 = spawn('python', ['./Python/Get_Asset_image.py', Assets[i]])
-				
-
-// 				python2.stdout.on('data', function(data){
-// 					rawData = data.toString()
-// 					console.log(rawData, id)
-// 					img = rawData.slice(0, 67)
-// 					name1 = rawData.slice(69,-2)
-// 				})
-
-// 				python2.on('close', (code)=>{
-// 					id = Assets[i]
-					
-// 					return res.status(200).json({
-// 													AssetImage: img,
-// 													AssetName: name1,
-// 													AssetId: id
-// 					})
-// 				})
-// 			}
-// 		})
-
-		
-// 	}catch(err) {
-// 		res.status(500).send("Error"+ err);
-// 	}
-// });
-
-
-// Get Assets by User name Using Axios
-router.get('/assets/:name', async (req, res) => {
+// Get Assets by User name
+router.get('/assets', async (req, res) => {
 	try {
-		// const {authorization} = req.headers;
-		// const {username} = jwt.verify(authorization, 'secret');
+		const {authorization} = req.headers;
+		const {username} = jwt.verify(authorization, 'secret');
 
-		const username = req.params.name
 		axios.get(
 			`https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`)
 					.then((response) => {
 						const { data } = response.data;
-						// console.log(data)
 
 						// For All Asset
-						console.log("For All Asset")
+						console.log(`All Asset of ${username}`)
+						let arr = []
 						for(i = 0; i< data.length; i++){
 							asset = data[i]
-							// console.log(i)
-							// console.log(asset.asset_id)
 							assetId = asset.asset_id
 							assetName = asset.name
 		
 							temp = asset.data
 							assetImage = temp.img
-							// console.log(assetId, assetName, assetImage)
 							console.log(i+1)
 							console.log("AssetImage: ",assetImage)
 							console.log("AssetName: ", assetName,)
 							console.log("AssetId:", assetId)
 
-							res.status(200).json({
-															AssetImage: assetImage,
-															AssetName: assetName,
-															AssetId: assetId
-													})
+							arr.push({AssetImage: assetImage,
+								AssetName: assetName,
+								AssetId: assetId
+							})
 						}
+						res.status(200).json(arr)
 					})
 
 	}catch(err){
@@ -122,10 +59,67 @@ router.get('/assets/:name', async (req, res) => {
 })
 
 // Get all Stories
-router.get('/', async(req, res)=>{
+router.get('/stories', async(req, res)=>{
 	try{
 		const stories = await Story.find()
 		res.json(stories)
+	}catch(err){
+		res.send("Error", err)
+	}
+})
+
+// Check user has Asset for the story 
+
+router.get('/story/:id', async(req, res)=>{
+	const {authorization} = req.headers;
+	const {username} = jwt.verify(authorization, 'secret');
+	storyId = req.params.id
+
+	try{
+		const stories = await Story.find()
+		for(i = 0; i < stories.length; i++){
+			storyId_Db = stories[i]._id
+			
+			if(storyId_Db == storyId){
+				console.log("Story found in Database")
+				AssetId_Db = stories[i].NFT_Assets
+				StoryContent = stories[i].content
+				axios.get(
+					`https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`)
+					.then(
+						(response)=>{
+							const { data } = response.data;
+							// console.log(data)
+							let assetId =[]
+							for(i=0; i< data.length; i++){
+								asset = data[i]
+								assetId.push(asset.asset_id)
+							}
+							console.log("Users",assetId)
+							console.log("Story",AssetId_Db)
+
+							let Flag
+							for(i in assetId){
+								for(j in AssetId_Db){
+									if(assetId[i] == AssetId_Db[j]){
+										console.log(assetId[i], AssetId_Db[j])
+										Flag = true
+									}else{
+										Flag = false
+									}
+								}
+							}
+							if(Flag == true){
+								console.log("Vverified")
+								res.status(200).json({"Story": StoryContent})
+							}else{
+								console.log("User dont have requred NFT for this story")
+							}
+						}
+					)
+				
+			}
+		}
 	}catch(err){
 		res.send("Error", err)
 	}
@@ -161,12 +155,12 @@ const upload = multer({
 })
 
 router.post('/', upload.single('image'), async(req, res)=>{
-	// console.log(req.file)
 	const newStory = new Story({
     name: req.body.name,
     content: req.body.content,
     NFT_Assets: req.body.NFT_Assets,
-	image: req.file.path
+	// image: req.file.path
+	image: req.file.originalname
   })
   try{
 		const S = await newStory.save()
