@@ -122,19 +122,22 @@ const Stories = () => {
         <div className="mt-12 flex flex-wrap justify-center">
           {stories.map((story, index) => {
             return (
-              <div className="rounded-lg  w-3/12 mx-14 mb-12 flex-initial">
+              <div className="rounded-lg  w-3/12 mx-14 mb-12 flex-initial relative">
+                <div className="absolute w-full h-full rounded-xl hover:bg-black hover:bg-opacity-70 hover:opacity-100 opacity-0 cursor-pointer flex justify-center items-center">
+                  <button
+                    className="border-2 border-white rounded-xl uppercase text-white py-3 px-6 focus:outline-none"
+                    onClick={() => setShowModal(true)}
+                  >
+                    View Story
+                  </button>
+                </div>
                 <img
                   src={story.image}
                   alt=""
                   className="rounded-t-xl w-full h-96"
                 />
                 <div className="h-16 bg-secondary rounded-b-xl text-white uppercase flex justify-center items-center">
-                  <p
-                    className="hover:text-gray-300 cursor-pointer"
-                    onClick={() => setShowModal(true)}
-                  >
-                    View Story
-                  </p>
+                  <p className="hover:text-gray-300">{story.name}</p>
                 </div>
               </div>
             );
