@@ -17,6 +17,7 @@ import Login from './pages/Login';
 import Stories from './pages/Stories';
 import MyAssets from './pages/MyAssets';
 import FullStory from './pages/FullStory';
+import AddStory from './pages/AddStory';
 
 import DashboardLayout from './components/DashboardLayout';
 
@@ -57,11 +58,24 @@ const MyApp = () => {
   useEffect(() => {
     const uAccount = localStorage.getItem('userAccount');
     const pubKey = localStorage.getItem('publicKey');
+    const token = localStorage.getItem('token');
 
-    if (uAccount && pubKey) {
+    if (uAccount && pubKey && token) {
+      setToken(token);
       setIsAuthenticated(true);
       setPublicKey(pubKey);
       setUserAccount(uAccount);
+      axios.defaults.headers.common['Authorization'] = token;
+      axios.interceptors.response.use(
+        (response) => {
+          console.log(response);
+          return response;
+        },
+        (error) => {
+          console.log(error);
+          return Promise.reject(error);
+        }
+      );
     }
   }, []);
 
@@ -83,6 +97,16 @@ const MyApp = () => {
               localStorage.setItem('userAccount', data.userAccount);
               localStorage.setItem('publicKey', data.publicKey);
               axios.defaults.headers.common['Authorization'] = data.token;
+              axios.interceptors.response.use(
+                (response) => {
+                  console.log(response);
+                  return response;
+                },
+                (error) => {
+                  console.log(error);
+                  return Promise.reject(error);
+                }
+              );
             },
             logout: () => {
               setIsAuthenticated(false);
@@ -105,11 +129,12 @@ const MyApp = () => {
                   <Route component={Stories} path="/" exact />
                   <Route component={MyAssets} path="/assets" exact />
                   <Route component={FullStory} path="/story/:id" exact />
+                  <Route component={AddStory} path="/new-story" exact />
                 </Switch>
               </DashboardLayout>
             )}
           </div>
-          <Redirect to={isAuthenticated ? '/' : '/login'} />
+          {/* <Redirect to={isAuthenticated ? '/' : '/login'} /> */}
         </AuthenticationContext.Provider>
       </Router>
     </>

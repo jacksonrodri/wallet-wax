@@ -3,65 +3,40 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Modal from '../components/ui-elements/Modal';
 
-// const stories = [
-//   {
-//     url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
-//     assetIds: '1099523918174,1099521783773',
-//     name: 'The cost of magic',
-//     image:
-//       'https://ipfs.atomichub.io/ipfs/QmaFe19mLD911BfZWn2tvEN7Ea8xjdirnQQRisUGGBzBPb',
-//   },
-//   {
-//     url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
-//     assetIds: '1099523919644,1099523919938',
-//     name: 'The sentinel of castle Margoron',
-//     image:
-//       'https://ipfs.atomichub.io/ipfs/QmcAZwySjb3MNtM9wA6oYuYg95KBEJ1iKyGYr7VDXxb82K',
-//   },
-//   {
-//     url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
-//     assetIds: '1099520827921,1099523920440',
-//     name: 'Choose Wisely',
-//     image:
-//       'https://ipfs.atomichub.io/ipfs/QmeUc3zvUR1vRP676Kuy1YZskWTX2Eusht3Z9NUo5k48ne/Common/Base%20Fronts/topps_series1_base_cin_brian_goodwin.jpg',
-//   },
-//   {
-//     url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
-//     assetIds: '1099523919644,1099523919938',
-//     name: 'The sentinel of castle Margoron',
-//     image:
-//       'https://ipfs.atomichub.io/ipfs/QmbFWnvdVXsu99FBo67adF4Rd7obut67Ue4PaU7xCE88TH',
-//   },
-//   {
-//     url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
-//     assetIds: '1099523918174,1099521783773',
-//     name: 'The cost of magic',
-//     image:
-//       'https://ipfs.atomichub.io/ipfs/QmVkw9vBdRXd7Y3qCty7m8bdxRNM9HGM5QRZyZfJ9mP1Hv',
-//   },
-//   {
-//     url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
-//     assetIds: '1099520827921,1099523920440',
-//     name: 'Choose Wisely',
-//     image:
-//       'http://worksofnick.com/wp-content/uploads/2018/01/castle_sea_1516308535.jpg',
-//   },
-// ];
-
 const Stories = () => {
   const { push } = useHistory();
   const [showModal, setShowModal] = useState(false);
   const [stories, setStories] = useState([]);
+  const [authorization, setAuthorization] = useState(false);
+  const [selectedStory, setSelectedStory] = useState({});
   useEffect(() => {
-    axios.get('/').then((response) => {
+    axios.get('/stories').then((response) => {
       setStories(response.data);
     });
   }, []);
+
+  const handleStorySelect = async (story) => {
+    setSelectedStory(story);
+    await axios
+      .get('/story/' + story._id)
+      .then(() => {
+        setAuthorization(true);
+      })
+      .catch((err) => {
+        if (err.response.status) {
+          setAuthorization(false);
+        }
+      });
+
+    setShowModal(true);
+  };
+
   return (
     <>
       <Modal show={showModal}>
         <h2 className="text-3xl text-primary uppercase text-center">
-          The Cost Of Magic
+          {/* The Cost Of Magic */}
+          {selectedStory.name || ''}
         </h2>
         <div className="flex mt-8">
           <img
@@ -77,30 +52,73 @@ const Stories = () => {
               upbringing, and tragic mishap. He sat on the edge of the armchair,
               his voluminous robes....
             </p>
-            <div className="flex items-center mt-8">
-              <svg
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                className="h-6 w-6 mr-2 text-green-700"
-              >
-                <path
-                  className="fill-current"
-                  d="M437.019,74.98C388.667,26.629,324.38,0,256,0C187.619,0,123.332,26.629,74.98,74.98C26.629,123.332,0,187.62,0,256
+            {authorization && (
+              <>
+                <div className="flex items-center mt-8">
+                  <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"
+                    className="h-6 w-6 mr-2 text-green-700"
+                  >
+                    <path
+                      className="fill-current"
+                      d="M437.019,74.98C388.667,26.629,324.38,0,256,0C187.619,0,123.332,26.629,74.98,74.98C26.629,123.332,0,187.62,0,256
 			s26.629,132.667,74.98,181.019C123.332,485.371,187.62,512,256,512s132.667-26.629,181.019-74.98
 			C485.371,388.667,512,324.38,512,256S485.371,123.333,437.019,74.98z M378.306,195.073L235.241,338.139
 			c-2.929,2.929-6.768,4.393-10.606,4.393c-3.839,0-7.678-1.464-10.607-4.393l-80.334-80.333c-5.858-5.857-5.858-15.354,0-21.213
 			c5.857-5.858,15.355-5.858,21.213,0l69.728,69.727l132.458-132.46c5.857-5.858,15.355-5.858,21.213,0
 			C384.164,179.718,384.164,189.215,378.306,195.073z"
-                />
-              </svg>
-              <p className="text-green-700 text-center">
-                Wohoo, you are authorized to access this story.
-              </p>
-            </div>
-            <button className="bg-primary py-4 px-10 mt-6 rounded-lg uppercase text-white focus:outline-none">
-              Continue Reading Full Story
-            </button>
+                    />
+                  </svg>
+                  <p className="text-green-700 text-center">
+                    Wohoo, you are authorized to access this story.
+                  </p>
+                </div>
+                <button
+                  className="bg-primary py-4 px-10 mt-6 rounded-lg uppercase text-white focus:outline-none"
+                  onClick={() => push('/story/' + selectedStory._id)}
+                >
+                  Continue Reading Full Story
+                </button>
+              </>
+            )}
+
+            {!authorization && (
+              <>
+                <div className="flex items-center mt-8">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="mr-2"
+                  >
+                    <path
+                      d="M10 0C4.47 0 0 4.47 0 10C0 15.53 4.47 20 10 20C15.53 20 20 15.53 20 10C20 4.47 15.53 0 10 0ZM15 13.59L13.59 15L10 11.41L6.41 15L5 13.59L8.59 10L5 6.41L6.41 5L10 8.59L13.59 5L15 6.41L11.41 10L15 13.59Z"
+                      fill="#FE2828"
+                    />
+                  </svg>
+
+                  <p className="text-red-700 text-center">
+                    Oops! You does not have required nft's to view this story..
+                  </p>
+                </div>
+                <button
+                  className="bg-primary py-4 px-10 mt-6 rounded-lg uppercase text-white focus:outline-none"
+                  onClick={() =>
+                    window.open(
+                      'https://wax.atomichub.io/explorer/asset/' +
+                        selectedStory.assetIds.split(',')[0]
+                    )
+                  }
+                >
+                  Buy NFT
+                </button>
+              </>
+            )}
+
             <p
               className="text-xs text-primary uppercase mt-4 cursor-pointer"
               onClick={() => setShowModal(false)}
@@ -135,14 +153,16 @@ const Stories = () => {
                 <div className="absolute w-full h-full rounded-xl hover:bg-black hover:bg-opacity-70 hover:opacity-100 opacity-0 cursor-pointer flex justify-center items-center">
                   <button
                     className="border-2 border-white rounded-xl uppercase text-white py-3 px-6 focus:outline-none"
-                    // onClick={() => setShowModal(true)}
-                    onClick={() => push(`/story/${story._id}`)}
+                    onClick={() => handleStorySelect(story)}
+                    // onClick={() => push(`/story/${story._id}`)}
                   >
                     View Story
                   </button>
                 </div>
                 <img
-                  src={story.image}
+                  src={
+                    process.env.REACT_APP_API_URL + '/uploads/' + story.image
+                  }
                   alt=""
                   className="rounded-t-xl w-full h-96"
                 />
