@@ -1,53 +1,62 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import Modal from '../components/ui-elements/Modal';
 
-const stories = [
-  {
-    url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
-    assetIds: '1099523918174,1099521783773',
-    name: 'The cost of magic',
-    image:
-      'https://ipfs.atomichub.io/ipfs/QmaFe19mLD911BfZWn2tvEN7Ea8xjdirnQQRisUGGBzBPb',
-  },
-  {
-    url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
-    assetIds: '1099523919644,1099523919938',
-    name: 'The sentinel of castle Margoron',
-    image:
-      'https://ipfs.atomichub.io/ipfs/QmcAZwySjb3MNtM9wA6oYuYg95KBEJ1iKyGYr7VDXxb82K',
-  },
-  {
-    url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
-    assetIds: '1099520827921,1099523920440',
-    name: 'Choose Wisely',
-    image:
-      'https://ipfs.atomichub.io/ipfs/QmeUc3zvUR1vRP676Kuy1YZskWTX2Eusht3Z9NUo5k48ne/Common/Base%20Fronts/topps_series1_base_cin_brian_goodwin.jpg',
-  },
-  {
-    url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
-    assetIds: '1099523919644,1099523919938',
-    name: 'The sentinel of castle Margoron',
-    image:
-      'https://ipfs.atomichub.io/ipfs/QmbFWnvdVXsu99FBo67adF4Rd7obut67Ue4PaU7xCE88TH',
-  },
-  {
-    url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
-    assetIds: '1099523918174,1099521783773',
-    name: 'The cost of magic',
-    image:
-      'https://ipfs.atomichub.io/ipfs/QmVkw9vBdRXd7Y3qCty7m8bdxRNM9HGM5QRZyZfJ9mP1Hv',
-  },
-  {
-    url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
-    assetIds: '1099520827921,1099523920440',
-    name: 'Choose Wisely',
-    image:
-      'http://worksofnick.com/wp-content/uploads/2018/01/castle_sea_1516308535.jpg',
-  },
-];
+// const stories = [
+//   {
+//     url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
+//     assetIds: '1099523918174,1099521783773',
+//     name: 'The cost of magic',
+//     image:
+//       'https://ipfs.atomichub.io/ipfs/QmaFe19mLD911BfZWn2tvEN7Ea8xjdirnQQRisUGGBzBPb',
+//   },
+//   {
+//     url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
+//     assetIds: '1099523919644,1099523919938',
+//     name: 'The sentinel of castle Margoron',
+//     image:
+//       'https://ipfs.atomichub.io/ipfs/QmcAZwySjb3MNtM9wA6oYuYg95KBEJ1iKyGYr7VDXxb82K',
+//   },
+//   {
+//     url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
+//     assetIds: '1099520827921,1099523920440',
+//     name: 'Choose Wisely',
+//     image:
+//       'https://ipfs.atomichub.io/ipfs/QmeUc3zvUR1vRP676Kuy1YZskWTX2Eusht3Z9NUo5k48ne/Common/Base%20Fronts/topps_series1_base_cin_brian_goodwin.jpg',
+//   },
+//   {
+//     url: 'http://worksofnick.com/2018/01/19/the-sentinel-of-castle-margoron/',
+//     assetIds: '1099523919644,1099523919938',
+//     name: 'The sentinel of castle Margoron',
+//     image:
+//       'https://ipfs.atomichub.io/ipfs/QmbFWnvdVXsu99FBo67adF4Rd7obut67Ue4PaU7xCE88TH',
+//   },
+//   {
+//     url: 'http://worksofnick.com/2018/11/16/the-cost-of-magic/',
+//     assetIds: '1099523918174,1099521783773',
+//     name: 'The cost of magic',
+//     image:
+//       'https://ipfs.atomichub.io/ipfs/QmVkw9vBdRXd7Y3qCty7m8bdxRNM9HGM5QRZyZfJ9mP1Hv',
+//   },
+//   {
+//     url: 'http://worksofnick.com/2017/09/01/choose-wisely/',
+//     assetIds: '1099520827921,1099523920440',
+//     name: 'Choose Wisely',
+//     image:
+//       'http://worksofnick.com/wp-content/uploads/2018/01/castle_sea_1516308535.jpg',
+//   },
+// ];
 
 const Stories = () => {
+  const { push } = useHistory();
   const [showModal, setShowModal] = useState(false);
+  const [stories, setStories] = useState([]);
+  useEffect(() => {
+    axios.get('/').then((response) => {
+      setStories(response.data);
+    });
+  }, []);
   return (
     <>
       <Modal show={showModal}>
@@ -126,7 +135,8 @@ const Stories = () => {
                 <div className="absolute w-full h-full rounded-xl hover:bg-black hover:bg-opacity-70 hover:opacity-100 opacity-0 cursor-pointer flex justify-center items-center">
                   <button
                     className="border-2 border-white rounded-xl uppercase text-white py-3 px-6 focus:outline-none"
-                    onClick={() => setShowModal(true)}
+                    // onClick={() => setShowModal(true)}
+                    onClick={() => push(`/story/${story._id}`)}
                   >
                     View Story
                   </button>
