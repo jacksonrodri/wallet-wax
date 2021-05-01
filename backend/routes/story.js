@@ -147,7 +147,7 @@ const upload = multer({
 	fileFilter: fileFilter
 })
 
-router.post('/', upload.single('image'), async(req, res)=>{
+router.post('/add-story', upload.single('image'), async(req, res)=>{
 	const newStory = new Story({
     name: req.body.name,
     content: req.body.content,
