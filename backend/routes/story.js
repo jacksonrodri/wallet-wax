@@ -3,6 +3,7 @@ var router = express.Router();
 const Story = require('../models/stories');
 const jwt = require('jsonwebtoken');
 const multer = require('multer')
+const axios = require('axios').default;
 
 const { spawn } = require("child_process")
 
@@ -17,57 +18,107 @@ router.post('/login', async(req, res)=>{
 	}
 });
 
-// Get Assets by User name
-router.get('/assets', async (req, res) => {
-	try {
-		const {authorization} = req.headers;
-		const {username} = jwt.verify(authorization, 'secret');
+// Get Assets by User name Using Python
+// router.get('/assets/:name', async (req, res) => {
+// 	try {
+// 		// const {authorization} = req.headers;
+// 		// const {username} = jwt.verify(authorization, 'secret');
 
-		var assetsData;
-		var Assets
-		const python = spawn('python', ['./Python/Get_User_Assets.py', username])
+// 		const username = req.params.name
 
-		python.stdout.on('data', function(data){
-			console.log('Pipe data from python script....')
-			assetsData = data.toString();
+// 		var assetsData;
+// 		var Assets
+// 		var rawData
+// 		const python = spawn('python', ['./Python/Get_User_Assets.py', username])
+
+// 		python.stdout.on('data', function(data){
+// 			console.log('Pipe data from python script....')
+// 			assetsData = data.toString();
 			
-			// Add Regex to get only asset numbers
-			var assetId = /\d+/g
-			Assets = assetsData.match(assetId)
-		})
+// 			// Add Regex to get only asset numbers
+// 			var assetId = /\d+/g
+// 			Assets = assetsData.match(assetId)
+// 		})
+// 		python.on('close', ()=>{
+// 			console.log(`Assets of ${username} `,Assets)
+// 			// assetsId = Assets[0]
+// 			// console.log(assetsId)
+// 			var i
+// 			for (i = 0; i < Assets.length; i++){
+// 				console.log(i)
+// 				id = Assets[i]
+// 				console.log(id)
 
-		python.on('close', ()=>{
-			res.status(200).json(Assets)
-		})
+// 				const python2 = spawn('python', ['./Python/Get_Asset_image.py', Assets[i]])
+				
+
+// 				python2.stdout.on('data', function(data){
+// 					rawData = data.toString()
+// 					console.log(rawData, id)
+// 					img = rawData.slice(0, 67)
+// 					name1 = rawData.slice(69,-2)
+// 				})
+
+// 				python2.on('close', (code)=>{
+// 					id = Assets[i]
+					
+// 					return res.status(200).json({
+// 													AssetImage: img,
+// 													AssetName: name1,
+// 													AssetId: id
+// 					})
+// 				})
+// 			}
+// 		})
+
 		
-	}catch(err) {
-		res.status(500).send("Error", err);
+// 	}catch(err) {
+// 		res.status(500).send("Error"+ err);
+// 	}
+// });
+
+
+// Get Assets by User name Using Axios
+router.get('/assets/:name', async (req, res) => {
+	try {
+		// const {authorization} = req.headers;
+		// const {username} = jwt.verify(authorization, 'secret');
+
+		const username = req.params.name
+		axios.get(
+			`https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`)
+					.then((response) => {
+						const { data } = response.data;
+						// console.log(data)
+
+						// For All Asset
+						console.log("For All Asset")
+						for(i = 0; i< data.length; i++){
+							asset = data[i]
+							// console.log(i)
+							// console.log(asset.asset_id)
+							assetId = asset.asset_id
+							assetName = asset.name
+		
+							temp = asset.data
+							assetImage = temp.img
+							// console.log(assetId, assetName, assetImage)
+							console.log(i+1)
+							console.log("AssetImage: ",assetImage)
+							console.log("AssetName: ", assetName,)
+							console.log("AssetId:", assetId)
+
+							res.status(200).json({
+															AssetImage: assetImage,
+															AssetName: assetName,
+															AssetId: assetId
+													})
+						}
+					})
+
+	}catch(err){
+		res.send("Error", err)
 	}
-});
-
-// Get Image of Assest
-router.get('/assetsImage', (req, res)=>{
-	try{
-		const {authorization} = req.headers;
-		const {assetsImage} = jwt.verify(authorization, 'secret');
-		// var assetsImage = req.params.id
-		const python = spawn('python', ['./Python/Get_Asset_image.py', assetsImage])
-
-		var img
-		python.stdout.on('data', function(data){
-			img = data.toString()
-		})
-
-		python.on('close', (code)=>{
-			console.log(`child process close all stdio with code ${code}`)
-			// res.send(img)
-			res.status(200).json(img)
-
-		})
-	}catch(err) {
-		res.status(500).send("Error", err);
-	}
-	
 })
 
 // Get all Stories
@@ -131,7 +182,7 @@ router.get('/:id', async(req, res)=>{
 		const s = await Story.findById(req.params.id)
 		res.json(s)
 	}catch(err){
-		res.send("Error", err)
+		res.send("Error"+ err)
 	}
 })
 

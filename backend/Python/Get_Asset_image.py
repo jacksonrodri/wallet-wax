@@ -4,13 +4,17 @@ import sys
 
 atom = Atom()
 assetsImage = []
+assetsName = []
 def getAssets():
 
     temp = atom.get_asset(sys.argv[1])
     assetsImage.append(temp.image)
+    assetsName.append(temp.name)
 
-    temp2 = assetsImage[0]
+    image = assetsImage[0]
+    name = assetsName[0]
 
-    print(temp2)
+    print(image)
+    print(name)
 
 getAssets()

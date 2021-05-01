@@ -15,7 +15,7 @@ dotenv.config();
 var app = express();
 
 // Create Connection
-mongoose.connect(url, {useNewUrlParser: true})
+mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
 const con = mongoose.connection
 
 // Check connection
