@@ -76,52 +76,44 @@ router.get('/story/:id', async(req, res)=>{
 	storyId = req.params.id
 
 	try{
-		const stories = await Story.find()
-		for(i = 0; i < stories.length; i++){
-			storyId_Db = stories[i]._id
-			
-			if(storyId_Db == storyId){
-				console.log("Story found in Database")
-				AssetId_Db = stories[i].NFT_Assets
-				StoryContent = stories[i].content
-				axios.get(
-					`https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`)
-					.then(
-						(response)=>{
-							const { data } = response.data;
-							// console.log(data)
-							let assetId =[]
-							for(i=0; i< data.length; i++){
-								asset = data[i]
-								assetId.push(asset.asset_id)
-							}
-							console.log("Users",assetId)
-							console.log("Story",AssetId_Db)
+		const stories = await Story.findOne({ _id: storyId})
 
-							let Flag
-							for(i in assetId){
-								for(j in AssetId_Db){
-									if(assetId[i] == AssetId_Db[j]){
-										console.log(assetId[i], AssetId_Db[j])
-										Flag = true
-									}else{
-										Flag = false
-									}
-								}
-							}
-							if(Flag == true){
-								console.log("Vverified")
-								res.status(200).json({"Story": StoryContent})
+		assetIdDb = stories.assetIds
+		storyContent = stories.content
+		axios.get(
+			`https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`)
+			.then(
+				(response)=>{
+					const { data } = response.data;
+					// console.log(data)
+					let assetId =[]
+					for(i=0; i< data.length; i++){
+						asset = data[i]
+						assetId.push(asset.asset_id)
+					}
+					console.log("Users",assetId)
+					console.log("Story",assetIdDb)
+
+					let flag
+					for(i in assetId){
+						for(j in assetIdDb){
+							if(assetId[i].localeCompare(assetIdDb[j])){
+								flag = true
 							}else{
-								console.log("User dont have requred NFT for this story")
+								flag = false
 							}
 						}
-					)
-				
-			}
-		}
+					}
+					if(flag == true){
+						console.log("Verified")
+						res.status(200).json({"Story": storyContent})
+					}else{
+						res.status(401).json({ Message: "User dont have requred NFT for this story"})
+					}
+				}
+			)
 	}catch(err){
-		res.send("Error", err)
+		res.send("Error"+err)
 	}
 })
 
@@ -134,7 +126,8 @@ var storage = multer.diskStorage({
 		cb(null, './public/uploads')
 	},
 	filename: function(req, file, cb){
-		cb(null, Date.now() + '_' + file.originalname)
+		// cb(null, Date.now() + '_' + file.originalname)
+		cb(null, file.originalname)
 	}
 })
 
@@ -158,7 +151,7 @@ router.post('/', upload.single('image'), async(req, res)=>{
 	const newStory = new Story({
     name: req.body.name,
     content: req.body.content,
-    NFT_Assets: req.body.NFT_Assets,
+    assetIds: req.body.assetIds,
 	// image: req.file.path
 	image: req.file.originalname
   })

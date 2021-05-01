@@ -9,7 +9,7 @@ const storySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    NFT_Assets: {
+    assetIds: {
         type: String,
         required: true
     },
