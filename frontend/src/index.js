@@ -7,6 +7,8 @@ import {
   Switch,
 } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
+import axios from 'axios';
+import dotenv from 'dotenv';
 
 import AuthenticationContext from './components/context/Authentication';
 import ModalContext from './components/context/Modal';
@@ -14,13 +16,43 @@ import ModalContext from './components/context/Modal';
 import Login from './pages/Login';
 import Stories from './pages/Stories';
 import MyAssets from './pages/MyAssets';
+import FullStory from './pages/FullStory';
 
 import DashboardLayout from './components/DashboardLayout';
+
+dotenv.config();
+
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.headers.common['Authorization'] = '';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+axios.interceptors.request.use(
+  (request) => {
+    console.log(request);
+    return request;
+  },
+  (error) => {
+    console.log(error);
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => {
+    console.log(response);
+    return response;
+  },
+  (error) => {
+    console.log(error);
+    return Promise.reject(error);
+  }
+);
 
 const MyApp = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [publicKey, setPublicKey] = useState('');
   const [userAccount, setUserAccount] = useState('');
+  const [token, setToken] = useState('');
 
   useEffect(() => {
     const uAccount = localStorage.getItem('userAccount');
@@ -41,19 +73,25 @@ const MyApp = () => {
             isAuthenticated,
             userAccount,
             publicKey,
+            token,
             authenticate: (data) => {
               setUserAccount(data.userAccount);
               setPublicKey(data.publicKey);
+              setToken(data.token);
               setIsAuthenticated(true);
+              localStorage.setItem('token', data.token);
               localStorage.setItem('userAccount', data.userAccount);
               localStorage.setItem('publicKey', data.publicKey);
+              axios.defaults.headers.common['Authorization'] = data.token;
             },
             logout: () => {
               setIsAuthenticated(false);
               setPublicKey('');
               setUserAccount('');
+              setToken('');
               localStorage.removeItem('userAccount');
               localStorage.removeItem('publicKey');
+              localStorage.removeItem('token');
             },
           }}
         >
@@ -66,6 +104,7 @@ const MyApp = () => {
                 <Switch>
                   <Route component={Stories} path="/" exact />
                   <Route component={MyAssets} path="/assets" exact />
+                  <Route component={FullStory} path="/story/:id" exact />
                 </Switch>
               </DashboardLayout>
             )}

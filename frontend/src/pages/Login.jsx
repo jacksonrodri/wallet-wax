@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import * as waxjs from '@waxio/waxjs/dist';
+import axios from 'axios';
 
 import AuthenticationContext from '../components/context/Authentication';
 
@@ -14,9 +15,12 @@ const Login = () => {
       let uAccount = await wax.login();
       let pubKeys = wax.pubKeys;
 
-      authenticate({
-        userAccount: uAccount,
-        publicKey: pubKeys[0],
+      axios.post('/login').then((res) => {
+        authenticate({
+          userAccount: uAccount,
+          publicKey: pubKeys[0],
+          token: res.data.token,
+        });
       });
     } catch (e) {
       setError('Failed to login, please try again.');
