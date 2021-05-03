@@ -15,17 +15,18 @@ const MyAssets = () => {
         <h2 className="text-5xl uppercase text-white text-center">
           Your assets
         </h2>
-
-        <div className="flex h-16 justify-end mt-28">
-          <input
-            type="text"
-            placeholder="search for asset"
-            className="px-8 rounded-l-md shadow-lg w-96"
-          />
-          <button className="rounded-r-md bg-secondary text-white uppercase px-8 h-full shadow-lg focus:outline-none">
-            Search
-          </button>
-        </div>
+        {assets.length > 0 && (
+          <div className="flex h-16 justify-end mt-28">
+            <input
+              type="text"
+              placeholder="search for asset"
+              className="px-8 rounded-l-md shadow-lg w-96"
+            />
+            <button className="rounded-r-md bg-secondary text-white uppercase px-8 h-full shadow-lg focus:outline-none">
+              Search
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="mt-12 flex flex-wrap justify-center">
@@ -49,10 +50,18 @@ const MyAssets = () => {
           );
         })}
       </div>
+
       <div className="flex justify-center">
-        <button className="text-white uppercase text-center cursor-pointer bg-secondary rounded-lg px-6 py-3 focus:outline-none">
-          View More
-        </button>
+        {assets.length < 1 && (
+          <p className="text-2xl text-white">
+            Sorry, you do not have any assets.
+          </p>
+        )}
+        {assets.length > 0 && (
+          <button className="text-white uppercase text-center cursor-pointer bg-secondary rounded-lg px-6 py-3 focus:outline-none">
+            View More
+          </button>
+        )}
       </div>
     </div>
   );

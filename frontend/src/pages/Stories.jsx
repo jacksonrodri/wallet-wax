@@ -150,9 +150,9 @@ const Stories = () => {
           {stories.map((story, index) => {
             return (
               <div className="rounded-lg  w-3/12 mx-14 mb-12 flex-initial relative">
-                <div className="absolute w-full h-full rounded-xl hover:bg-black hover:bg-opacity-70 hover:opacity-100 opacity-0 cursor-pointer flex justify-center items-center">
+                <div className="absolute w-full h-full rounded-xl hover:bg-black hover:bg-opacity-80 hover:opacity-100 opacity-0 cursor-pointer flex justify-center items-center transition duration-500 ease-in-out">
                   <button
-                    className="border-2 border-white rounded-xl uppercase text-white py-3 px-6 focus:outline-none"
+                    className="border-2 border-white rounded-xl uppercase text-white py-3 px-6 focus:outline-none bg-gray-800 transition duration-500 ease-in-out"
                     onClick={() => handleStorySelect(story)}
                     // onClick={() => push(`/story/${story._id}`)}
                   >
