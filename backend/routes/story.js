@@ -62,9 +62,11 @@ router.get('/assets', async (req, res) => {
 router.get('/stories', async(req, res)=>{
 	try{
 		const stories = await Story.find()
+		
 		res.json(stories)
 	}catch(err){
-		res.send("Error", err)
+		// res.send("Error", err)
+		res.status(401).json({ Message: err})
 	}
 })
 
@@ -108,6 +110,7 @@ router.get('/story/:id', async(req, res)=>{
 						console.log("Verified")
 						res.status(200).json({"Story": storyContent})
 					}else{
+						// res.status(200).json({"Story": storyContent})
 						res.status(401).json({ Message: "User dont have requred NFT for this story"})
 					}
 				}
@@ -159,28 +162,42 @@ router.post('/add-story', upload.single('image'), async(req, res)=>{
 		const S = await newStory.save()
       	res.json(S)
 	}catch(err){
-		res.send("Error", err)
+		// res.send("Error", err)
+		res.status(401).status({ message: err})
 	}
 })
 
-// Get perticular Story
+// Search Story
 router.get('/:id', async(req, res)=>{
 	try{
 		const s = await Story.findById(req.params.id)
 		res.json(s)
 	}catch(err){
-		res.send("Error"+ err)
+		res.status(404).status({ message: err})
+		// res.send("Error"+ err)
 	}
 })
 
 // Delete story
 
-router.delete('/delete/:id', async(req, res)=>{
+router.delete('/delete-story/:id', async(req, res)=>{
 	try{
-		const s = await Story.findById(req.params.id)
-		const res = await s.deleteOne({_id: toString(s)});
+		const storyId = await Story.findById(req.params.id)
+		// console.log(storyId)
+
+		if(storyId != null){
+			var deleteQuery = { _id: storyId };
+			Story.deleteOne(deleteQuery, (err)=>{
+					if(err) throw err;
+					res.status(200).json({ message: `${storyId.name} is deleted successfully`})
+				})
+		}
+		else{
+			res.status(404).json({ message: "Story not found"})
+		}
+		
 	}catch(err){
-		res.send("Error", err)
+		res.status(204).json({ message: err})
 	}
 })
 
