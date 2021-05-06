@@ -212,7 +212,7 @@ module.exports = router;
 
 /*
 
- Make sure you do these before coding.
+ Make sure you do these before coding.g
  - Install Prettier extension
  - Install eslint extension
  - Add this in VSCode settings - "editor.formatOnSave": true,
