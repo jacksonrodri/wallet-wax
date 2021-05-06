@@ -212,8 +212,16 @@ module.exports = router;
 
 /*
 
+ Make sure you do these before coding.
+ - Install Prettier extension
+ - Install eslint extension
+ - Add this in VSCode settings - "editor.formatOnSave": true,
+
 Tasks
-- Create Edit API.
+
+- Create Story details API with the new check where we can verify multiple assets. **Most Important
+- Create Edit API. **Important
+
 - Remove unused variables and imports.
 - Remove unnecessary code (Python scripts, Stylesheets, Views)
 - Make a folder called Controllers, add all the logics there instead of routes.
@@ -228,9 +236,6 @@ Tasks
 
 
 
- Other things
- - Install Prettier extension
- - Install eslint extension
- - Add this in VSCode settings - "editor.formatOnSave": true,
+
 
 */
