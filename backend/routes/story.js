@@ -7,6 +7,7 @@ const axios = require('axios').default;
 
 const { spawn } = require('child_process');
 const { response } = require('../app');
+const { copyFileSync } = require('fs');
 
 router.post('/login', async (req, res) => {
   try {
@@ -188,36 +189,90 @@ router.get('/:id', async (req, res) => {
 
 // Delete story
 
-router.delete('/delete-story/:id', async (req, res) => {
-  try {
-    const storyId = await Story.findById(req.params.id);
-    // console.log(storyId)
+router.delete('/delete-story', async(req, res)=>{
+	try{
+		const storyId = await Story.findById(req.body.storyid)
+		// console.log(storyId)
 
-    if (storyId != null) {
-      var deleteQuery = { _id: storyId };
-      Story.deleteOne(deleteQuery, (err) => {
-        if (err) throw err;
-        res
-          .status(200)
-          .json({ message: `${storyId.name} is deleted successfully` });
-      });
-    } else {
-      res.status(404).json({ message: 'Story not found' });
-    }
-  } catch (err) {
-    res.status(204).json({ message: err });
-  }
-});
+		if(storyId != null){
+			var deleteQuery = { _id: storyId };
+			Story.deleteOne(deleteQuery, (err)=>{
+					if(err) throw err;
+					res.status(200).json({ message: `${storyId.name} is deleted successfully`})
+				})
+		}
+		else{
+			res.status(404).json({ message: "Story not found"})
+		}
+		
+	}catch(err){
+		res.status(204).json({ message: err})
+	}
+})
+
+// Edit Story
+
+router.patch('/edit-story/:storyid', async(req, res)=>{
+	try{
+		// const story = await Story.findById(req.params.storyid)
+		// console.log(story)
+		// console.log(story.name)
+
+		// if(story != null){
+		// 	var UpdateQuery = { _id: story._id };
+
+		// 	console.log(req.body.name)
+		// 	console.log(req.body.content)
+		// 	console.log(req.body.assetIds)
+
+		// 	const newValues = {
+		// 		$set:{
+		// 			name: req.body.name,
+		// 			content: req.body.content,
+		// 			assetIds: req.body.assetIds,
+		// 			image: req.body.image
+		// 		}
+		// 	}
+
+		// 	Story.updateOne(UpdateQuery, newValues, (err)=>{
+		// 			if(err) throw err;
+		// 			res.status(200).json({ message: `${story.name} is Updated successfully`})
+		// 		})
+		// }
+		// else{
+		// 	res.status(404).json({ message: "Story not found"})
+		// }
+		const storyId = req.params.storyid
+		console.log(storyId)
+		const updates = req.body
+		console.log(updates)
+		const result = await Story.findByIdAndUpdate(storyId, updates)
+		console.log(result)
+		
+		res.status(200).json({ message: `${story.name} is Updated successfully`})
+
+
+	}catch(err){
+		res.status(204).json({ message: err})
+	}
+	
+
+})
+
 module.exports = router;
 
 /*
+
  Make sure you do these before coding.g
  - Install Prettier extension
  - Install eslint extension
  - Add this in VSCode settings - "editor.formatOnSave": true,
+
 Tasks
+
 - Create Story details API with the new check where we can verify multiple assets. **Most Important
 - Create Edit API. **Important
+
 - Remove unused variables and imports.
 - Remove unnecessary code (Python scripts, Stylesheets, Views)
 - Make a folder called Controllers, add all the logics there instead of routes.
@@ -227,5 +282,11 @@ Tasks
 	/middleware/auth.middleware.js
  For example:
  router.get('/', auth, YOUR_CONTROLLER_REFERENCE());
+
  - Remove package-lock.json from root folder where /frontend and /backend exists.
+
+
+
+
+
 */
