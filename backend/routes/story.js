@@ -7,6 +7,7 @@ const axios = require('axios').default;
 
 const { spawn } = require("child_process");
 const { response } = require('../app');
+const { copyFileSync } = require('fs');
 
 
 router.post('/login', async(req, res)=>{
@@ -73,15 +74,18 @@ router.get('/stories', async(req, res)=>{
 // Check user has Asset for the story 
 
 router.get('/story/:id', async(req, res)=>{
-	const {authorization} = req.headers;
-	const {username} = jwt.verify(authorization, 'secret');
-	storyId = req.params.id
-
+	
 	try{
+		const {authorization} = req.headers;
+		const {username} = jwt.verify(authorization, 'secret');
+		storyId = req.params.id
 		const stories = await Story.findOne({ _id: storyId})
+		console.log(stories)
 
 		assetIdDb = stories.assetIds
+		console.log("Databse Asset IDs"+assetIdDb)
 		storyContent = stories.content
+
 		axios.get(
 			`https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`)
 			.then(
@@ -99,6 +103,7 @@ router.get('/story/:id', async(req, res)=>{
 					let flag
 					for(i in assetId){
 						for(j in assetIdDb){
+							console.log(assetIdDb[j])
 							if(assetId[i].localeCompare(assetIdDb[j])){
 								flag = true
 							}else{
@@ -116,7 +121,9 @@ router.get('/story/:id', async(req, res)=>{
 				}
 			)
 	}catch(err){
-		res.send("Error"+err)
+		// res.send("Error"+err)
+		res.status(401).json({ Message: err})
+
 	}
 })
 
@@ -180,9 +187,9 @@ router.get('/:id', async(req, res)=>{
 
 // Delete story
 
-router.delete('/delete-story/:id', async(req, res)=>{
+router.delete('/delete-story', async(req, res)=>{
 	try{
-		const storyId = await Story.findById(req.params.id)
+		const storyId = await Story.findById(req.body.storyid)
 		// console.log(storyId)
 
 		if(storyId != null){
@@ -199,6 +206,55 @@ router.delete('/delete-story/:id', async(req, res)=>{
 	}catch(err){
 		res.status(204).json({ message: err})
 	}
+})
+
+// Edit Story
+
+router.patch('/edit-story/:storyid', async(req, res)=>{
+	try{
+		// const story = await Story.findById(req.params.storyid)
+		// console.log(story)
+		// console.log(story.name)
+
+		// if(story != null){
+		// 	var UpdateQuery = { _id: story._id };
+
+		// 	console.log(req.body.name)
+		// 	console.log(req.body.content)
+		// 	console.log(req.body.assetIds)
+
+		// 	const newValues = {
+		// 		$set:{
+		// 			name: req.body.name,
+		// 			content: req.body.content,
+		// 			assetIds: req.body.assetIds,
+		// 			image: req.body.image
+		// 		}
+		// 	}
+
+		// 	Story.updateOne(UpdateQuery, newValues, (err)=>{
+		// 			if(err) throw err;
+		// 			res.status(200).json({ message: `${story.name} is Updated successfully`})
+		// 		})
+		// }
+		// else{
+		// 	res.status(404).json({ message: "Story not found"})
+		// }
+		const storyId = req.params.storyid
+		console.log(storyId)
+		const updates = req.body
+		console.log(updates)
+		const result = await Story.findByIdAndUpdate(storyId, updates)
+		console.log(result)
+		
+		res.status(200).json({ message: `${story.name} is Updated successfully`})
+
+
+	}catch(err){
+		res.status(204).json({ message: err})
+	}
+	
+
 })
 
 module.exports = router;
