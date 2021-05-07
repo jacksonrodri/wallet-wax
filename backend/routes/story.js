@@ -83,6 +83,11 @@ router.get('/story/:id', async (req, res) => {
     const stories = await Story.findOne({ _id: storyId });
 
     assetIdDb = stories.assetIds;
+	
+	// Regex to get all Asset ID's in a list
+	var assetIdRegex = /\d+/g
+	var storyAssetId = assetIdDb.match(assetIdRegex)
+
     storyContent = stories.content;
     axios
       .get(
@@ -91,32 +96,56 @@ router.get('/story/:id', async (req, res) => {
       .then((response) => {
         const { data } = response.data;
         // console.log(data)
-        let assetId = [];
+        let userAssetId = [];
         for (i = 0; i < data.length; i++) {
           asset = data[i];
-          assetId.push(asset.asset_id);
+          userAssetId.push(asset.asset_id);
         }
-        console.log('Users', assetId);
-        console.log('Story', assetIdDb);
+        console.log('Users', userAssetId);
+        console.log('Story', storyAssetId);
 
-        let flag;
-        for (i in assetId) {
-          for (j in assetIdDb) {
-            if (assetId[i].localeCompare(assetIdDb[j])) {
-              flag = true;
+		console.log(storyAssetId[0])
+		console.log(userAssetId[0])
+
+		storyAssetIdlength = storyAssetId.length
+		console.log(storyAssetIdlength)
+
+        let arr = []
+		let requiredAsset = []
+        for (i in userAssetId) {
+          for (j=0; j<storyAssetId.length; j++) {
+			let check = userAssetId[i] === storyAssetId[j]
+			console.log(check)
+
+            if (check) {
+				console.log(`Compare ${userAssetId[i]} = ${storyAssetId[j]}`)
+				arr.push(1)
+				console.log("Array:"+arr)
+				console.log(j)
+				console.log(storyAssetIdlength)
+				
+				temp = parseInt(j)+1
+				console.log(temp)
+
+				if(temp === storyAssetIdlength){
+					break
+				}
+				console.log("Flag True")
             } else {
-              flag = false;
+				requiredAsset.push(storyAssetId[j])
+				console.log("Flag False")
             }
+
           }
         }
-        if (flag == true) {
+        if (storyAssetIdlength === arr.length) {
           console.log('Verified');
           res.status(200).json({ Story: storyContent });
         } else {
           // res.status(200).json({"Story": storyContent})
           res
             .status(401)
-            .json({ Message: 'User dont have requred NFT for this story' });
+            .json({ Message: `User dont have requred NFT for this story, And Required Assets are ${[...new Set(requiredAsset)]}` });
         }
       });
   } catch (err) {
@@ -164,6 +193,7 @@ router.post('/add-story', upload.single('image'), async (req, res) => {
     name: req.body.name,
     content: req.body.content,
     assetIds: req.body.assetIds,
+	description: req.body.description,
     // image: req.file.path
     image: req.file.originalname,
   });
@@ -212,7 +242,7 @@ router.delete('/delete-story', async(req, res)=>{
 
 // Edit Story
 
-router.patch('/edit-story/:storyid', async(req, res)=>{
+router.put('/edit-story/:storyid', async(req, res)=>{
 	try{
 		// const story = await Story.findById(req.params.storyid)
 		// console.log(story)
@@ -244,12 +274,15 @@ router.patch('/edit-story/:storyid', async(req, res)=>{
 		// }
 		const storyId = req.params.storyid
 		console.log(storyId)
-		const updates = req.body
-		console.log(updates)
-		const result = await Story.findByIdAndUpdate(storyId, updates)
+		const { name, content, assetIds, description} = req.body
+		const fields = {
+			name, content, assetIds, description
+		}
+		console.log(fields)
+		const result = await Story.findByIdAndUpdate(storyId, fields)
 		console.log(result)
 		
-		res.status(200).json({ message: `${story.name} is Updated successfully`})
+		res.status(200).json({ message: `${result.name} is Updated successfully`})
 
 
 	}catch(err){
