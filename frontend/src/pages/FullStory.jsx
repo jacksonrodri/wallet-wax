@@ -7,13 +7,15 @@ const FullStory = () => {
   const [story, setStory] = useState();
   useEffect(() => {
     axios.get(`/story/${id}`).then((response) => {
-      console.log(response);
       setStory(response.data.Story);
     });
   }, [id]);
 
   return (
-    <div className="mt-24 w-6/12 mx-auto text-white text-2xl">{story}</div>
+    <div
+      className="mt-24 w-6/12 mx-auto text-white text-2xl"
+      dangerouslySetInnerHTML={{ __html: story }}
+    ></div>
   );
 };
 
