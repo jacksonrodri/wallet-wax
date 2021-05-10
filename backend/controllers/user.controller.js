@@ -96,8 +96,15 @@ const verifyUserAssets = async (req, res) => {
         } else {
           res.status(200).json({ Story: storyContent });
         }
+      })
+      .catch((err) => {
+        console.log(err.response);
+        res
+          .status(500)
+          .json({ message: 'There is some issue on atomic assets server.' });
       });
   } catch (err) {
+    console.log(err);
     res.send('Error' + err);
   }
 };

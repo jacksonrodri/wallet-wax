@@ -25,15 +25,17 @@ const Stories = () => {
       .get('/story/' + story._id)
       .then(() => {
         setAuthorization(true);
+        setShowModal(true);
       })
       .catch((err) => {
-        if (err.response.status) {
+        if (err.response.status == 401) {
           setDeniedAssets(err.response.data.deniedAssets);
           setAuthorization(false);
+          setShowModal(true);
+        } else if (err.response.status == 500) {
+          alert('Atomic hub API service is down.');
         }
       });
-
-    setShowModal(true);
   };
 
   const searchHandler = () => {
