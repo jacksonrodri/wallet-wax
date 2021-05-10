@@ -13,7 +13,7 @@ const FullStory = () => {
 
   return (
     <div
-      className="mt-24 w-6/12 mx-auto text-white text-2xl"
+      className="mt-24 w-6/12 mx-auto text-2xl border p-12 rounded-xl bg-hover shadow-xl text-black min-h-screen"
       dangerouslySetInnerHTML={{ __html: story }}
     ></div>
   );
