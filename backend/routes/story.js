@@ -1,20 +1,20 @@
 var express = require('express');
 var router = express.Router();
-const upload = require('../middleware/imageUpload')
+const upload = require('../middleware/imageUpload');
 
-const { 
+const {
   getAllStories,
   addStory,
   searchStory,
   deletStory,
-  editStory
-} = require('../controllers/stories.controller')
+  editStory,
+} = require('../controllers/stories.controller');
 
 const {
   userLogin,
   getUserAssets,
-  verifyUserAssets
-} = require('../controllers/user.controller')
+  verifyUserAssets,
+} = require('../controllers/user.controller');
 
 router.post('/login', userLogin);
 
@@ -31,12 +31,12 @@ router.get('/story/:id', verifyUserAssets);
 router.post('/add-story', upload.single('image'), addStory);
 
 // Search Story
-router.get('/:id', searchStory);
+router.get('/search/story/:query', searchStory);
 
 // Delete story
-router.delete('/delete-story', deletStory)
+router.delete('/delete-story', deletStory);
 
 // Edit Story
-router.put('/edit-story/:storyid', editStory)
+router.put('/edit-story/:storyid', editStory);
 
 module.exports = router;

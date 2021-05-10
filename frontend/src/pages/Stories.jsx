@@ -9,6 +9,9 @@ const Stories = () => {
   const [stories, setStories] = useState([]);
   const [authorization, setAuthorization] = useState(false);
   const [selectedStory, setSelectedStory] = useState({});
+
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
     axios.get('/stories').then((response) => {
       setStories(response.data);
@@ -29,6 +32,12 @@ const Stories = () => {
       });
 
     setShowModal(true);
+  };
+
+  const searchHandler = () => {
+    axios.get(`/search/story/${searchQuery}`).then((response) => {
+      setStories(response.data);
+    });
   };
 
   return (
@@ -139,8 +148,13 @@ const Stories = () => {
               type="text"
               placeholder="search for story"
               className="px-8 rounded-l-md shadow-lg w-96"
+              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery}
             />
-            <button className="rounded-r-md bg-secondary text-white uppercase px-8 h-full shadow-lg focus:outline-none">
+            <button
+              className="rounded-r-md bg-secondary text-white uppercase px-8 h-full shadow-lg focus:outline-none"
+              onClick={() => searchHandler()}
+            >
               Search
             </button>
           </div>

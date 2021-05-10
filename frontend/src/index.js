@@ -20,6 +20,7 @@ import FullStory from './pages/FullStory';
 import AddStory from './pages/AddStory';
 
 import DashboardLayout from './components/DashboardLayout';
+import AdminStories from './pages/AdminStories';
 
 dotenv.config();
 
@@ -130,6 +131,7 @@ const MyApp = () => {
                   <Route component={MyAssets} path="/assets" exact />
                   <Route component={FullStory} path="/story/:id" exact />
                   <Route component={AddStory} path="/new-story" exact />
+                  <Route component={AdminStories} path="/stories" exact />
                 </Switch>
               </DashboardLayout>
             )}
