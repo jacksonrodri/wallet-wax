@@ -1,8 +1,13 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Input from '../components/ui-elements/Input';
 
+import JoditEditor from 'jodit-react';
+
 const AddStory = () => {
+  const editorRef = useRef(null);
+  const [editorState, setEditorState] = useState('');
+
   const [formData, setFormData] = useState({
     name: '',
     assetIds: '',
@@ -18,7 +23,8 @@ const AddStory = () => {
     data.append('name', formData.name);
     data.append('assetIds', formData.assetIds);
     data.append('description', formData.description);
-    data.append('content', formData.content);
+    // data.append('content', formData.content);
+    data.append('content', editorState);
     data.append('image', formData.image);
 
     axios.post('/add-story', data).then(() => {
@@ -66,15 +72,16 @@ const AddStory = () => {
           value={formData.description}
         />
       </div>
-      <div>
-        <textarea
-          name="content"
-          placeholder="Your content"
-          className="w-full rounded-xl h-60 mb-8 py-4 px-6"
-          onChange={(e) =>
-            setFormData({ ...formData, content: e.target.value })
-          }
-          value={formData.content}
+      <div className="border mb-8 bg-white">
+        <JoditEditor
+          ref={editorRef}
+          value={editorState}
+          config={{ readonly: false }}
+          tabIndex={1}
+          onBlur={(newContent) => {
+            setEditorState(newContent);
+          }}
+          onChange={(newContent) => {}}
         />
       </div>
       <input
