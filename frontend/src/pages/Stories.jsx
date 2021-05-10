@@ -111,15 +111,23 @@ const Stories = () => {
                   </svg>
 
                   <p className="text-red-700 text-center">
-                    {selectedStory.assetIds.split(',').length <= 1
-                      ? 'Oops! You do not have the required asset for this story.'
-                      : `Oops! This story requires
+                    {selectedStory && (
+                      <>
+                        {selectedStory.assetIds && (
+                          <>
+                            {selectedStory.assetIds.split(',').length <= 1
+                              ? 'Oops! You do not have the required asset for this story.'
+                              : `Oops! This story requires
                     ${selectedStory.assetIds.split(',').length}
                     assets, you only have
                     ${
                       selectedStory.assetIds.split(',').length -
                       deniedAssets.length
                     }.`}
+                          </>
+                        )}
+                      </>
+                    )}
                   </p>
                 </div>
 
