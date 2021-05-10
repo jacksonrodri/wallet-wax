@@ -35,7 +35,7 @@ const Stories = () => {
   };
 
   const searchHandler = () => {
-    axios.get(`/search/story/${searchQuery}`).then((response) => {
+    axios.get(`/search/story?query=${searchQuery}`).then((response) => {
       setStories(response.data);
     });
   };

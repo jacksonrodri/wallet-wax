@@ -31,7 +31,7 @@ router.get('/story/:id', verifyUserAssets);
 router.post('/add-story', upload.single('image'), addStory);
 
 // Search Story
-router.get('/search/story/:query', searchStory);
+router.get('/search/story', searchStory);
 
 // Delete story
 router.delete('/delete-story', deletStory);

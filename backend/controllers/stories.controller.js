@@ -32,7 +32,7 @@ const addStory = async (req, res) => {
 const searchStory = async (req, res) => {
   try {
     const s = await Story.find({
-      name: { $regex: req.params.query, $options: 'i' },
+      name: { $regex: req.query.query || '', $options: 'i' },
     });
     res.json(s);
   } catch (err) {
