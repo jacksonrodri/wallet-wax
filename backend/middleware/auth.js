@@ -5,7 +5,7 @@ export default (req, res, next) => {
 	if (!token) {
 		res.status(401).json({ message: 'Unauthorized: No token supplied!' });
 	} else {
-		jwt.verify(token, "secret", (err) => {
+		jwt.verify(token, process.env.API_KEY, (err) => {
 			if (err) {
 				res.status(401).json({ message: 'Unauthorized: Invalid token!' });
 			} else {

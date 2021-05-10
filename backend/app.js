@@ -9,13 +9,12 @@ const dotenv = require('dotenv')
 var storyRouter = require('./routes/story');
 
 const mongoose = require('mongoose')
-const url = 'mongodb+srv://Prakash:Prakash123@stories.tm4j1.mongodb.net/NFT_WAX_SERVER'
 
 dotenv.config();
 var app = express();
 
 // Create Connection
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(process.env.Mongo_Connection_URL, {useNewUrlParser: true, useUnifiedTopology: true})
 const con = mongoose.connection
 
 // Check connection
