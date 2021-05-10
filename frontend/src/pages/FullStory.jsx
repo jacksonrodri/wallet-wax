@@ -14,7 +14,7 @@ const FullStory = () => {
   return (
     <div
       className="mt-24 w-6/12 mx-auto text-2xl border p-12 rounded-xl bg-hover shadow-xl text-black"
-      style={{ height: '600px' }}
+      style={{ minHeight: '600px' }}
       dangerouslySetInnerHTML={{ __html: story }}
     ></div>
   );
