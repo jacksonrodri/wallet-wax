@@ -55,13 +55,9 @@ const Stories = () => {
             className="w-3/12 h-60 rounded-lg"
             alt=""
           />
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center flex-grow">
             <p className="flex-grow ml-8 tracking-wider leading-loose text-md text-justify">
-              The wizard shook his head, thoughtful. He was not one of those
-              wise, wizened, white-bearded wizards, but one of those younger,
-              intense types, which were equal parts cunning, ambition, somber
-              upbringing, and tragic mishap. He sat on the edge of the armchair,
-              his voluminous robes....
+              {selectedStory.description}
             </p>
             {authorization && (
               <>
@@ -113,7 +109,15 @@ const Stories = () => {
                   </svg>
 
                   <p className="text-red-700 text-center">
-                    Oops! You does not have required nft's to view this story..
+                    {selectedStory.assetIds.split(',').length <= 1
+                      ? 'Oops! You do not have the required asset for this story.'
+                      : `Oops! This story requires
+                    ${selectedStory.assetIds.split(',').length}
+                    assets, you only have
+                    ${
+                      selectedStory.assetIds.split(',').length -
+                      deniedAssets.length
+                    }.`}
                   </p>
                 </div>
 
