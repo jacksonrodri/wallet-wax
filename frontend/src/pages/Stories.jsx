@@ -51,7 +51,9 @@ const Stories = () => {
         </h2>
         <div className="flex mt-8">
           <img
-            src="https://ipfs.atomichub.io/ipfs/QmVkw9vBdRXd7Y3qCty7m8bdxRNM9HGM5QRZyZfJ9mP1Hv"
+            src={
+              process.env.REACT_APP_API_URL + '/uploads/' + selectedStory.image
+            }
             className="w-3/12 h-60 rounded-lg"
             alt=""
           />
