@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { HiPencil } from 'react-icons/hi';
+import { useHistory } from 'react-router';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import axios from 'axios';
 
 const AdminStories = () => {
+  const { push } = useHistory();
+
   const [stories, setStories] = useState([]);
   useEffect(() => {
     getStories();
@@ -18,6 +21,7 @@ const AdminStories = () => {
   const deleteStory = (storyId) => {
     console.log('here');
     axios.delete(`/delete-story/${storyId}`).then(() => {
+      alert('Story deleted successfully');
       getStories();
     });
   };
@@ -35,7 +39,10 @@ const AdminStories = () => {
               {story.name}
             </div>
             <div className="flex items-center">
-              <HiPencil className="mr-4 cursor-pointer hover:text-gray-300" />
+              <HiPencil
+                className="mr-4 cursor-pointer hover:text-gray-300"
+                onClick={() => push('/edit-story/' + story._id)}
+              />
               <RiDeleteBin7Fill
                 className="cursor-pointer hover:text-red-400"
                 onClick={() => deleteStory(story._id)}

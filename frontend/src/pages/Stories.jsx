@@ -9,6 +9,7 @@ const Stories = () => {
   const [stories, setStories] = useState([]);
   const [authorization, setAuthorization] = useState(false);
   const [selectedStory, setSelectedStory] = useState({});
+  const [deniedAssets, setDeniedAssets] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -27,6 +28,7 @@ const Stories = () => {
       })
       .catch((err) => {
         if (err.response.status) {
+          setDeniedAssets(err.response.data.deniedAssets);
           setAuthorization(false);
         }
       });
@@ -114,17 +116,25 @@ const Stories = () => {
                     Oops! You does not have required nft's to view this story..
                   </p>
                 </div>
-                <button
-                  className="bg-primary py-4 px-10 mt-6 rounded-lg uppercase text-white focus:outline-none"
-                  onClick={() =>
-                    window.open(
-                      'https://wax.atomichub.io/explorer/asset/' +
-                        selectedStory.assetIds.split(',')[0]
-                    )
-                  }
-                >
-                  Buy NFT
-                </button>
+
+                <div className="flex justify-between flex-wrap">
+                  {deniedAssets.map((assetId, idx) => {
+                    return (
+                      <button
+                        className={`bg-primary py-4 px-10 mt-6 rounded-lg uppercase text-white focus:outline-none ${
+                          idx !== deniedAssets.length - 1 && idx !== 0 && 'mx-4'
+                        }`}
+                        onClick={() =>
+                          window.open(
+                            'https://wax.atomichub.io/explorer/asset/' + assetId
+                          )
+                        }
+                      >
+                        Buy NFT {idx + 1}
+                      </button>
+                    );
+                  })}
+                </div>
               </>
             )}
 

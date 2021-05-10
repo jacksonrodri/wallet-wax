@@ -8,6 +8,7 @@ const {
   searchStory,
   deletStory,
   editStory,
+  adminGetStory,
 } = require('../controllers/stories.controller');
 
 const {
@@ -34,9 +35,11 @@ router.post('/add-story', upload.single('image'), addStory);
 router.get('/search/story', searchStory);
 
 // Delete story
-router.delete('/delete-story', deletStory);
+router.delete('/delete-story/:storyId', deletStory);
 
 // Edit Story
 router.put('/edit-story/:storyid', editStory);
+
+router.get('/admin/story/:storyId', adminGetStory);
 
 module.exports = router;

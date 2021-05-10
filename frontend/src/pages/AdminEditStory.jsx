@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import Input from '../components/ui-elements/Input';
+import { useParams } from 'react-router';
 
 import JoditEditor from 'jodit-react';
 
-const AddStory = () => {
+const EditStory = () => {
+  const { id } = useParams();
+
   const editorRef = useRef(null);
   const [editorState, setEditorState] = useState('');
 
@@ -13,34 +16,34 @@ const AddStory = () => {
     assetIds: '',
     description: '',
     content: '',
-    image: '',
   });
 
   useEffect(() => {
-    axios.get('/story');
+    axios.get(`/admin/story/${id}`).then((response) => {
+      const { name, assetIds, description, content } = response.data;
+      setFormData({ ...formData, name, assetIds, description });
+      setEditorState(content);
+    });
   }, []);
 
-  const handleCreate = (e) => {
+  const handleEdit = (e) => {
     e.preventDefault();
 
     let data = new FormData();
     data.append('name', formData.name);
     data.append('assetIds', formData.assetIds);
     data.append('description', formData.description);
-    // data.append('content', formData.content);
     data.append('content', editorState);
-    data.append('image', formData.image);
 
-    axios.post('/add-story', data).then(() => {
-      alert('Story added succesfully.');
-    });
+    axios
+      .put('/edit-story/' + id, { ...formData, content: editorState })
+      .then(() => {
+        alert('Story edited successfully.');
+      });
   };
 
   return (
-    <form
-      className="flex flex-col w-6/12 mx-auto mt-24"
-      onSubmit={handleCreate}
-    >
+    <form className="flex flex-col w-6/12 mx-auto mt-24" onSubmit={handleEdit}>
       <h2 className="mb-20 text-white text-3xl uppercase">
         Create a new story
       </h2>
@@ -96,12 +99,12 @@ const AddStory = () => {
       /> */}
       <button
         className="bg-secondary py-4 px-10 mt-6 rounded-lg uppercase text-white focus:outline-none"
-        onClick={handleCreate}
+        onClick={handleEdit}
       >
-        Create New Story
+        Edit Story
       </button>
     </form>
   );
 };
 
-export default AddStory;
+export default EditStory;

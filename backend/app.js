@@ -17,6 +17,7 @@ var app = express();
 mongoose.connect(process.env.DATABASE, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: true,
 });
 const con = mongoose.connection;
 
