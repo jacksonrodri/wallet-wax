@@ -6,7 +6,8 @@ var logger = require('morgan');
 var cors = require('cors');
 const dotenv = require('dotenv');
 
-var storyRouter = require('./routes/story');
+const storyRoutes = require('./routes/story');
+const adminRoutes = require('./routes/admin');
 
 const mongoose = require('mongoose');
 
@@ -33,7 +34,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', storyRouter);
+app.use('/', storyRoutes);
+app.use('/admin', adminRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

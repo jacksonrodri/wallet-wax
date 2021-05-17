@@ -6,10 +6,13 @@ const axios = require('axios').default;
 const userLogin = async (req, res) => {
   try {
     const { username } = req.body;
-    const token = jwt.sign({ username }, process.env.API_KEY, {
+
+    //HS: Check the username against in the database collection users, pass role from that user into the JWT token.
+
+    const token = jwt.sign({ username, role }, process.env.API_KEY, {
       expiresIn: '365d',
     });
-    res.status(200).json({ token });
+    res.status(200).json({ token }); // HS: Send role in the response as well.
   } catch (err) {
     res.send('Error' + err);
   }
