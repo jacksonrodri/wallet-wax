@@ -84,7 +84,7 @@ const MyApp = (props) => {
     //   );
     // }
 
-    console.log(props.ual);
+    console.log(props.ual.activeUser);
     if (props.ual.activeUser !== null) {
       if (props.ual.activeUser.accountName !== null) {
         axios
@@ -97,7 +97,7 @@ const MyApp = (props) => {
             setToken(res.data.token);
             console.log(res);
             setIsAuthenticated(true);
-            setPublicKey('1234');
+            setPublicKey(props.ual.activeUser.pubKeys[0]);
             setUserAccount(props.ual.activeUser.accountName);
             axios.defaults.headers.common['Authorization'] = res.data.token;
             axios.interceptors.response.use(
@@ -166,15 +166,17 @@ const MyApp = (props) => {
                   <Route component={Stories} path="/" exact />
                   <Route component={MyAssets} path="/assets" exact />
                   <Route component={FullStory} path="/story/:id" exact />
-                  <Route component={AddStory} path="/new-story" exact />
-                  <Route
-                    component={AdminEditStory}
-                    path="/edit-story/:id"
-                    exact
-                  />
-                  <Route component={AdminStories} path="/stories" exact />
-
-                  {/* {role === 'admin'} */}
+                  {role.toLowerCase() === 'admin' && (
+                    <>
+                      <Route component={AddStory} path="/new-story" exact />
+                      <Route
+                        component={AdminEditStory}
+                        path="/edit-story/:id"
+                        exact
+                      />
+                      <Route component={AdminStories} path="/stories" exact />
+                    </>
+                  )}
                 </Switch>
               </DashboardLayout>
             )}
