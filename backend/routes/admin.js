@@ -10,3 +10,5 @@ router.post('/story', isAdmin, () => {});
 // Edit Story
 
 // Delete Story
+
+module.exports = router;

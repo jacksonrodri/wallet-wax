@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
-export default (req, res, next) => {
+module.exports = (req, res, next) => {
   const token = req.headers['x-access-token'] || req.headers.authorization;
   if (!token) {
     res.status(401).json({ message: 'Unauthorized: No token supplied!' });

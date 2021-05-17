@@ -59,6 +59,7 @@ const MyApp = (props) => {
   const [publicKey, setPublicKey] = useState('');
   const [userAccount, setUserAccount] = useState('');
   const [token, setToken] = useState('');
+  const [role, setRole] = useState('');
 
   useEffect(() => {
     // const uAccount = localStorage.getItem('userAccount');
@@ -83,30 +84,32 @@ const MyApp = (props) => {
     //   );
     // }
 
-    console.log('OYE', props.ual);
-
+    console.log(props.ual);
     if (props.ual.activeUser !== null) {
       if (props.ual.activeUser.accountName !== null) {
-        axios.post('/login').then((res) => {
-          console.log('JWT');
-          console.log(res);
-          setToken(res.token);
-          setIsAuthenticated(true);
-          setPublicKey('1234');
-          setUserAccount(props.ual.activeUser.accountName);
-          axios.defaults.headers.common['Authorization'] = token;
-          axios.interceptors.response.use(
-            (response) => {
-              console.log(response);
-              return response;
-            },
-            (error) => {
-              console.log(error);
-              return Promise.reject(error);
-            }
-          );
-          // history.push('/');
-        });
+        axios
+          .post('/login', { username: props.ual.activeUser.accountName })
+          .then((res) => {
+            console.log('JWT');
+            console.log(res);
+            setRole(res.data.role);
+            setToken(res.data.token);
+            console.log(res);
+            setIsAuthenticated(true);
+            setPublicKey('1234');
+            setUserAccount(props.ual.activeUser.accountName);
+            axios.defaults.headers.common['Authorization'] = res.data.token;
+            axios.interceptors.response.use(
+              (response) => {
+                console.log(response);
+                return response;
+              },
+              (error) => {
+                console.log(error);
+                return Promise.reject(error);
+              }
+            );
+          });
       }
     }
   }, [props.ual.activeUser]);
