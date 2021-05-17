@@ -22,8 +22,6 @@ router.post('/login', userLogin);
 // Get Assets by User name
 router.get('/assets', getUserAssets);
 
-// Get all Stories
-router.get('/stories', getAllStories);
 
 // Check user has Asset for the story
 router.get('/story/:id', verifyUserAssets);
