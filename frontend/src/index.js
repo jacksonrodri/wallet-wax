@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+} from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 import dotenv from 'dotenv';
@@ -49,6 +54,7 @@ axios.interceptors.response.use(
 );
 
 const MyApp = (props) => {
+  const history = useHistory();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [publicKey, setPublicKey] = useState('');
   const [userAccount, setUserAccount] = useState('');
@@ -77,11 +83,13 @@ const MyApp = (props) => {
     //   );
     // }
 
-    console.log(props.ual);
+    console.log('OYE', props.ual);
 
     if (props.ual.activeUser !== null) {
       if (props.ual.activeUser.accountName !== null) {
         axios.post('/login').then((res) => {
+          console.log('JWT');
+          console.log(res);
           setToken(res.token);
           setIsAuthenticated(true);
           setPublicKey('1234');
@@ -97,6 +105,7 @@ const MyApp = (props) => {
               return Promise.reject(error);
             }
           );
+          // history.push('/');
         });
       }
     }
@@ -132,6 +141,7 @@ const MyApp = (props) => {
               );
             },
             logout: () => {
+              props.ual.logout();
               setIsAuthenticated(false);
               setPublicKey('');
               setUserAccount('');
