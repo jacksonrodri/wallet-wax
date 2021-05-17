@@ -173,6 +173,8 @@ const MyApp = (props) => {
                     exact
                   />
                   <Route component={AdminStories} path="/stories" exact />
+
+                  {/* {role === 'admin'} */}
                 </Switch>
               </DashboardLayout>
             )}

@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
         res.status(401).json({ message: 'Unauthorized: Invalid token!' });
       } else {
         const { role } = jwt.verify(token, process.env.API_KEY);
-        if (role === 'Admin') {
+        if (role.toLowerCase() === 'admin') {
           next();
         } else {
           res.status(401).json({ message: 'Unauthorized: user is not admin.' });
