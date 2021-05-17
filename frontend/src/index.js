@@ -90,8 +90,6 @@ const MyApp = (props) => {
         axios
           .post('/login', { username: props.ual.activeUser.accountName })
           .then((res) => {
-            console.log('JWT');
-            console.log(res);
             setRole(res.data.role.toLowerCase());
             setToken(res.data.token);
             setIsAuthenticated(true);
