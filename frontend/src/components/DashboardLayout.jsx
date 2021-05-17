@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import AuthenticationContext from './context/Authentication';
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = ({ children, role }) => {
   const { userAccount, logout } = useContext(AuthenticationContext);
   const history = useHistory();
   const location = useLocation();
@@ -30,6 +30,27 @@ const DashboardLayout = ({ children }) => {
               >
                 My Assets
               </li>
+              {role === 'admin' && (
+                <li
+                  onClick={() => history.push('/new-story')}
+                  className={`cursor-pointer ${
+                    location.pathname === '/new-story' &&
+                    'border-b border-white'
+                  }`}
+                >
+                  Add Story
+                </li>
+              )}
+              {role === 'admin' && (
+                <li
+                  onClick={() => history.push('/stories')}
+                  className={`cursor-pointer ${
+                    location.pathname === '/stories' && 'border-b border-white'
+                  }`}
+                >
+                  Manage Stories
+                </li>
+              )}
             </ul>
           </nav>
           <div className="flex items-center">

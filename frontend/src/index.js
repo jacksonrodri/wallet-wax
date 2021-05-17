@@ -160,7 +160,7 @@ const MyApp = (props) => {
               <Route component={Login} path="/login" exact />
             )}
             {isAuthenticated && (
-              <DashboardLayout>
+              <DashboardLayout role={role}>
                 <Switch>
                   <Route component={Stories} path="/" exact />
                   <Route component={MyAssets} path="/assets" exact />
