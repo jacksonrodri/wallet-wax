@@ -20,7 +20,7 @@ const AdminStories = () => {
 
   const deleteStory = (storyId) => {
     console.log('here');
-    axios.delete(`/delete-story/${storyId}`).then(() => {
+    axios.delete(`/admin/delete-story/${storyId}`).then(() => {
       alert('Story deleted successfully');
       getStories();
     });

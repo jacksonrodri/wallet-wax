@@ -36,7 +36,7 @@ const EditStory = () => {
     data.append('content', editorState);
 
     axios
-      .put('/edit-story/' + id, { ...formData, content: editorState })
+      .put('/admin/edit-story/' + id, { ...formData, content: editorState })
       .then(() => {
         alert('Story edited successfully.');
       });

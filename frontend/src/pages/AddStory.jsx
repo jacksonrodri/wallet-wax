@@ -27,7 +27,7 @@ const AddStory = () => {
     data.append('content', editorState);
     data.append('image', formData.image);
 
-    axios.post('/add-story', data).then(() => {
+    axios.post('/admin/add-story', data).then(() => {
       alert('Story added succesfully.');
     });
   };
