@@ -1,31 +1,46 @@
 import React, { useState, useContext } from 'react';
-import * as waxjs from '@waxio/waxjs/dist';
+// import * as waxjs from '@waxio/waxjs/dist';
 import axios from 'axios';
+import { withUAL } from 'ual-reactjs-renderer';
 
 import AuthenticationContext from '../components/context/Authentication';
 
-const Login = () => {
+const Login = (props) => {
   const { authenticate } = useContext(AuthenticationContext);
 
   const [error, setError] = useState('');
 
   const loginHandler = async () => {
-    const wax = new waxjs.WaxJS('https://wax.greymass.com', null, null, false);
-    try {
-      let uAccount = await wax.login();
-      let pubKeys = wax.pubKeys;
+    await props.ual.showModal();
 
-      axios.post('/login').then((res) => {
-        authenticate({
-          userAccount: uAccount,
-          publicKey: pubKeys[0],
-          token: res.data.token,
-        });
-      });
-    } catch (e) {
-      setError('Failed to login, please try again.');
-    }
+    // if (props.ual.activeUser.accountName) {
+    //   axios.post('/login').then((res) => {
+    //     authenticate({
+    //       userAccount: props.ual.activeUser.accountName,
+    //       publicKey: props.ual.activeUser.pubKeys[0],
+    //       token: res.data.token,
+    //     });
+    //   });
+    // }
   };
+
+  // const loginHandler = async () => {
+  //   const wax = new waxjs.WaxJS('https://wax.greymass.com', null, null, false);
+  //   try {
+  //     let uAccount = await wax.login();
+  //     let pubKeys = wax.pubKeys;
+
+  //     axios.post('/login').then((res) => {
+  //       authenticate({
+  //         userAccount: uAccount,
+  //         publicKey: pubKeys[0],
+  //         token: res.data.token,
+  //       });
+  //     });
+  //   } catch (e) {
+  //     setError('Failed to login, please try again.');
+  //   }
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -45,4 +60,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withUAL(Login);

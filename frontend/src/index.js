@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom';
 import {
   BrowserRouter as Router,
   Route,
-  Redirect,
   Switch,
+  useHistory,
 } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import { UALProvider, withUAL } from 'ual-reactjs-renderer';
+import { Wax } from '@eosdacio/ual-wax';
 
 import AuthenticationContext from './components/context/Authentication';
 import ModalContext from './components/context/Modal';
@@ -51,35 +53,63 @@ axios.interceptors.response.use(
   }
 );
 
-const MyApp = () => {
+const MyApp = (props) => {
+  const history = useHistory();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [publicKey, setPublicKey] = useState('');
   const [userAccount, setUserAccount] = useState('');
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    const uAccount = localStorage.getItem('userAccount');
-    const pubKey = localStorage.getItem('publicKey');
-    const token = localStorage.getItem('token');
+    // const uAccount = localStorage.getItem('userAccount');
+    // const pubKey = localStorage.getItem('publicKey');
+    // const token = localStorage.getItem('token');
 
-    if (uAccount && pubKey && token) {
-      setToken(token);
-      setIsAuthenticated(true);
-      setPublicKey(pubKey);
-      setUserAccount(uAccount);
-      axios.defaults.headers.common['Authorization'] = token;
-      axios.interceptors.response.use(
-        (response) => {
-          console.log(response);
-          return response;
-        },
-        (error) => {
-          console.log(error);
-          return Promise.reject(error);
-        }
-      );
+    // if (uAccount && pubKey && token) {
+    //   setToken(token);
+    //   setIsAuthenticated(true);
+    //   setPublicKey(pubKey);
+    //   setUserAccount(uAccount);
+    //   axios.defaults.headers.common['Authorization'] = token;
+    //   axios.interceptors.response.use(
+    //     (response) => {
+    //       console.log(response);
+    //       return response;
+    //     },
+    //     (error) => {
+    //       console.log(error);
+    //       return Promise.reject(error);
+    //     }
+    //   );
+    // }
+
+    console.log('OYE', props.ual);
+
+    if (props.ual.activeUser !== null) {
+      if (props.ual.activeUser.accountName !== null) {
+        axios.post('/login').then((res) => {
+          console.log('JWT');
+          console.log(res);
+          setToken(res.token);
+          setIsAuthenticated(true);
+          setPublicKey('1234');
+          setUserAccount(props.ual.activeUser.accountName);
+          axios.defaults.headers.common['Authorization'] = token;
+          axios.interceptors.response.use(
+            (response) => {
+              console.log(response);
+              return response;
+            },
+            (error) => {
+              console.log(error);
+              return Promise.reject(error);
+            }
+          );
+          // history.push('/');
+        });
+      }
     }
-  }, []);
+  }, [props.ual.activeUser]);
 
   return (
     <>
@@ -111,6 +141,7 @@ const MyApp = () => {
               );
             },
             logout: () => {
+              props.ual.logout();
               setIsAuthenticated(false);
               setPublicKey('');
               setUserAccount('');
@@ -149,9 +180,25 @@ const MyApp = () => {
   );
 };
 
+const myChain = {
+  chainId: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
+  rpcEndpoints: [{ protocol: 'https', host: 'chain.wax.io', port: '' }],
+};
+
+const wax = new Wax([myChain], { appName: 'NFT Story Cards' });
+
+const MyUALConsumer = withUAL(MyApp);
+
 ReactDOM.render(
   <ModalContext.Provider>
-    <MyApp />
+    <UALProvider
+      chains={[myChain]}
+      authenticators={[wax]}
+      appName={'NFT Story Cards'}
+    >
+      <MyUALConsumer />
+    </UALProvider>
+    ,
   </ModalContext.Provider>,
   document.getElementById('root')
 );
