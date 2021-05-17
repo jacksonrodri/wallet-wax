@@ -24,7 +24,7 @@ const DashboardLayout = ({ children, role }) => {
               </li>
               <li
                 onClick={() => history.push('/assets')}
-                className={`cursor-pointer ${
+                className={`mr-40 cursor-pointer ${
                   location.pathname === '/assets' && 'border-b border-white'
                 }`}
               >
@@ -33,7 +33,7 @@ const DashboardLayout = ({ children, role }) => {
               {role === 'admin' && (
                 <li
                   onClick={() => history.push('/new-story')}
-                  className={`cursor-pointer ${
+                  className={`mr-40 cursor-pointer ${
                     location.pathname === '/new-story' &&
                     'border-b border-white'
                   }`}
