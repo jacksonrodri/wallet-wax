@@ -92,8 +92,8 @@ const MyApp = (props) => {
           .then((res) => {
             console.log('JWT');
             console.log(res);
-            // setRole(res.data.role);
-            setRole('admin');
+            setRole(res.data.role);
+            // setRole('admin');
             setToken(res.data.token);
             console.log(res);
             setIsAuthenticated(true);
