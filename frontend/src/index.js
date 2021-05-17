@@ -93,9 +93,7 @@ const MyApp = (props) => {
             console.log('JWT');
             console.log(res);
             setRole(res.data.role.toLowerCase());
-            // setRole('admin');
             setToken(res.data.token);
-            console.log(res);
             setIsAuthenticated(true);
             setPublicKey(props.ual.activeUser.pubKeys[0]);
             setUserAccount(props.ual.activeUser.accountName);
@@ -124,35 +122,32 @@ const MyApp = (props) => {
             userAccount,
             publicKey,
             token,
-            authenticate: (data) => {
-              setUserAccount(data.userAccount);
-              setPublicKey(data.publicKey);
-              setToken(data.token);
-              setIsAuthenticated(true);
-              localStorage.setItem('token', data.token);
-              localStorage.setItem('userAccount', data.userAccount);
-              localStorage.setItem('publicKey', data.publicKey);
-              axios.defaults.headers.common['Authorization'] = data.token;
-              axios.interceptors.response.use(
-                (response) => {
-                  console.log(response);
-                  return response;
-                },
-                (error) => {
-                  console.log(error);
-                  return Promise.reject(error);
-                }
-              );
-            },
+            // authenticate: (data) => {
+            //   setUserAccount(data.userAccount);
+            //   setPublicKey(data.publicKey);
+            //   setToken(data.token);
+            //   setIsAuthenticated(true);
+            //   localStorage.setItem('token', data.token);
+            //   localStorage.setItem('userAccount', data.userAccount);
+            //   localStorage.setItem('publicKey', data.publicKey);
+            //   axios.defaults.headers.common['Authorization'] = data.token;
+            //   axios.interceptors.response.use(
+            //     (response) => {
+            //       console.log(response);
+            //       return response;
+            //     },
+            //     (error) => {
+            //       console.log(error);
+            //       return Promise.reject(error);
+            //     }
+            //   );
+            // },
             logout: () => {
               props.ual.logout();
               setIsAuthenticated(false);
               setPublicKey('');
               setUserAccount('');
               setToken('');
-              localStorage.removeItem('userAccount');
-              localStorage.removeItem('publicKey');
-              localStorage.removeItem('token');
             },
           }}
         >
