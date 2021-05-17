@@ -1,14 +1,10 @@
 var express = require('express');
 var router = express.Router();
-const upload = require('../middleware/imageUpload');
+const isAuthenticated = require('../middleware/auth');
 
 const {
   getAllStories,
-  addStory,
-  searchStory,
-  deletStory,
-  editStory,
-  adminGetStory,
+  searchStory
 } = require('../controllers/stories.controller');
 
 const {
@@ -19,25 +15,17 @@ const {
 
 router.post('/login', userLogin);
 
-// Get Assets by User name
-router.get('/assets', getUserAssets);
+// Get All stories
+router.get('/stories', isAuthenticated, getAllStories);
 
+// Get Assets by User name
+router.get('/assets', isAuthenticated, getUserAssets);
 
 // Check user has Asset for the story
-router.get('/story/:id', verifyUserAssets);
-
-// Insert New Story
-router.post('/add-story', upload.single('image'), addStory);
+router.get('/story/:id', isAuthenticated, verifyUserAssets);
 
 // Search Story
-router.get('/search/story', searchStory);
+router.get('/search/story', isAuthenticated, searchStory);
 
-// Delete story
-router.delete('/delete-story/:storyId', deletStory);
-
-// Edit Story
-router.put('/edit-story/:storyid', editStory);
-
-router.get('/admin/story/:storyId', adminGetStory);
 
 module.exports = router;

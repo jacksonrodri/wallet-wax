@@ -1,10 +1,8 @@
 const Story = require('../models/stories');
 const jwt = require('jsonwebtoken');
 const axios = require('axios').default;
-// const API_KEY = process.env.API_KEY
 
 const users = require('../models/users');
-
 
 const userLogin = async (req, res) => {
   try {
@@ -21,7 +19,7 @@ const userLogin = async (req, res) => {
     else{
       role = "User"
     }
-    
+
     const token = jwt.sign({ username, role }, process.env.API_KEY, {
       expiresIn: '365d',
     });
