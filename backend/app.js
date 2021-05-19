@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 
 const storyRoutes = require('./routes/story');
 const adminRoutes = require('./routes/admin');
+const superAdminRoutes = require('./routes/superAdmin');
 
 const mongoose = require('mongoose');
 
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', storyRoutes);
 app.use('/admin', adminRoutes);
+app.use('/super-admin', superAdminRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
