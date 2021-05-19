@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 const isSuperAdmin = require('../middleware/isSuperAdmin');
 
+const {
+  addAdmin,
+  deleteAdmin,
+  getAllAdmins,
+} = require('../controllers/super.admin.controller');
+
 // Add new admin. (Only Super admin can add/delete admins from the database)
-router.post('/add-admin', isSuperAdmin, (req, res) => {
-  const { username } = req.body;
-});
+router.post('/add-admin', isSuperAdmin, addAdmin);
 
 // Delete admin
-router.get('/delete-admin/:adminId', isSuperAdmin, (req, res) => {
-  const { adminId } = req.params;
-
-  // adminId === _id
-});
+router.delete('/delete-admin/:adminId', isSuperAdmin, deleteAdmin);
 
 // Get list of admins.
-router.get('/all-admins', isSuperAdmin);
+router.get('/all-admins', isSuperAdmin, getAllAdmins);
 
 module.exports = router;

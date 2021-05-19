@@ -17,7 +17,7 @@ const searchStory = async (req, res) => {
     });
     res.json(s);
   } catch (err) {
-    res.status(404).status({ message: err });
+    res.status(404).json({ message: err });
   }
 };
 

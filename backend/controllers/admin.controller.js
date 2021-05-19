@@ -12,7 +12,7 @@ const addStory = async (req, res) => {
     const S = await newStory.save();
     res.json(S);
   } catch (err) {
-    res.status(401).status({ message: err });
+    res.status(401).json({ message: err });
   }
 };
 
