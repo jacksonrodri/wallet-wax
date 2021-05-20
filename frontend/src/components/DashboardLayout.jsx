@@ -30,25 +30,39 @@ const DashboardLayout = ({ children, role }) => {
               >
                 My Assets
               </li>
-              {role === 'admin' && (
+              {role === 'admin' ||
+                (role === 'super-admin' && (
+                  <li
+                    onClick={() => history.push('/new-story')}
+                    className={`mr-40 cursor-pointer ${
+                      location.pathname === '/new-story' &&
+                      'border-b border-white'
+                    }`}
+                  >
+                    Add Story
+                  </li>
+                ))}
+              {role === 'admin' ||
+                (role === 'super-admin' && (
+                  <li
+                    onClick={() => history.push('/stories')}
+                    className={`cursor-pointer ${
+                      location.pathname === '/stories' &&
+                      'border-b border-white'
+                    }`}
+                  >
+                    Manage Stories
+                  </li>
+                ))}
+              {role === 'super-admin' && (
                 <li
-                  onClick={() => history.push('/new-story')}
-                  className={`mr-40 cursor-pointer ${
-                    location.pathname === '/new-story' &&
+                  onClick={() => history.push('/manage-admins')}
+                  className={`ml-40 cursor-pointer ${
+                    location.pathname === '/manage-admins' &&
                     'border-b border-white'
                   }`}
                 >
-                  Add Story
-                </li>
-              )}
-              {role === 'admin' && (
-                <li
-                  onClick={() => history.push('/stories')}
-                  className={`cursor-pointer ${
-                    location.pathname === '/stories' && 'border-b border-white'
-                  }`}
-                >
-                  Manage Stories
+                  Manage Admins
                 </li>
               )}
             </ul>

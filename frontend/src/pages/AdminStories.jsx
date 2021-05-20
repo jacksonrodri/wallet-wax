@@ -29,7 +29,10 @@ const AdminStories = () => {
     <div className="mt-24 w-6/12 mx-auto text-white text-2xl pb-10">
       {stories.map((story, key) => {
         return (
-          <div className="h-20 bg-secondary mb-8 rounded-xl flex items-center px-8 shadow-xl">
+          <div
+            className="h-20 bg-secondary mb-8 rounded-xl flex items-center px-8 shadow-xl"
+            key={story.name}
+          >
             <div className="flex items-center flex-grow">
               <img
                 src={process.env.REACT_APP_API_URL + '/uploads/' + story.image}

@@ -25,6 +25,8 @@ import DashboardLayout from './components/DashboardLayout';
 import AdminStories from './pages/AdminStories';
 import AdminEditStory from './pages/AdminEditStory';
 
+import ManageAdmins from './pages/ManageAdmins';
+
 dotenv.config();
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
@@ -90,6 +92,7 @@ const MyApp = (props) => {
         axios
           .post('/login', { username: props.ual.activeUser.accountName })
           .then((res) => {
+            console.log(res);
             setRole(res.data.role.toLowerCase());
             setToken(res.data.token);
             setIsAuthenticated(true);
@@ -159,17 +162,27 @@ const MyApp = (props) => {
                   <Route component={Stories} path="/" exact />
                   <Route component={MyAssets} path="/assets" exact />
                   <Route component={FullStory} path="/story/:id" exact />
-                  {role.toLowerCase() === 'admin' && (
-                    <>
-                      <Route component={AddStory} path="/new-story" exact />
-                      <Route
-                        component={AdminEditStory}
-                        path="/edit-story/:id"
-                        exact
-                      />
-                      <Route component={AdminStories} path="/stories" exact />
-                    </>
+
+                  {role.toLowerCase() === 'super-admin' && (
+                    <Route
+                      component={ManageAdmins}
+                      path="/manage-admins"
+                      exact
+                    />
                   )}
+
+                  {role.toLowerCase() === 'admin' ||
+                    (role.toLowerCase() === 'super-admin' && (
+                      <>
+                        <Route component={AddStory} path="/new-story" exact />
+                        <Route
+                          component={AdminEditStory}
+                          path="/edit-story/:id"
+                          exact
+                        />
+                        <Route component={AdminStories} path="/stories" exact />
+                      </>
+                    ))}
                 </Switch>
               </DashboardLayout>
             )}
