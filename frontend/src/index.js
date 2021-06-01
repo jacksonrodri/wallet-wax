@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
   useHistory,
+  Redirect,
 } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
@@ -187,7 +188,7 @@ const MyApp = (props) => {
               </DashboardLayout>
             )}
           </div>
-          {/* <Redirect to={isAuthenticated ? '/' : '/login'} /> */}
+          <Redirect to={isAuthenticated ? '/' : '/login'} />
         </AuthenticationContext.Provider>
       </Router>
     </>
