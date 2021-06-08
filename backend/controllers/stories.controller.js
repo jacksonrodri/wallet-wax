@@ -23,5 +23,5 @@ const searchStory = async (req, res) => {
 
 module.exports = {
   getAllStories,
-  searchStory
+  searchStory,
 };

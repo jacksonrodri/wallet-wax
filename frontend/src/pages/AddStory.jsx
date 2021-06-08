@@ -26,7 +26,6 @@ const AddStory = () => {
 
   const handleCreate = (e) => {
     e.preventDefault();
-    console.log(editorState);
     if (handleValidations()) {
       let data = new FormData();
       data.append('name', formData.name);

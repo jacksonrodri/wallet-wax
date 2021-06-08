@@ -16,7 +16,6 @@ const ManageAdmins = () => {
   };
 
   const deleteAdmin = (storyId) => {
-    console.log('here');
     axios.delete(`/super-admin/delete-admin/${storyId}`).then(() => {
       alert('Admin deleted successfully');
       getAdmins();

@@ -7,17 +7,16 @@ const users = require('../models/users');
 const userLogin = async (req, res) => {
   try {
     const { username } = req.body;
-    let role = ""
+    let role = '';
     //HS: Check the username against in the database collection users, pass role from that user into the JWT token.
-    
+
     const admin = await users.findOne({
-      username: username
+      username: username,
     });
-    if(admin != null){
-      role = admin.role
-    }
-    else{
-      role = "User"
+    if (admin != null) {
+      role = admin.role;
+    } else {
+      role = 'User';
     }
 
     const token = jwt.sign({ username, role }, process.env.API_KEY, {
@@ -42,7 +41,6 @@ const getUserAssets = async (req, res) => {
         const { data } = response.data;
 
         // For All Asset
-        console.log(`All Asset of ${username}`);
         let arr = [];
         for (i = 0; i < data.length; i++) {
           asset = data[i];
@@ -51,10 +49,6 @@ const getUserAssets = async (req, res) => {
 
           temp = asset.data;
           assetImage = temp.img;
-          console.log(i + 1);
-          console.log('AssetImage: ', assetImage);
-          console.log('AssetName: ', assetName);
-          console.log('AssetId:', assetId);
 
           arr.push({
             AssetImage: assetImage,
@@ -112,7 +106,6 @@ const verifyUserAssets = async (req, res) => {
         }
       })
       .catch((err) => {
-        console.log(err.response);
         res
           .status(500)
           .json({ message: 'There is some issue on atomic assets server.' });

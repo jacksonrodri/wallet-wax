@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  useHistory,
   Redirect,
 } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
@@ -36,28 +35,23 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use(
   (request) => {
-    console.log(request);
     return request;
   },
   (error) => {
-    console.log(error);
     return Promise.reject(error);
   }
 );
 
 axios.interceptors.response.use(
   (response) => {
-    console.log(response);
     return response;
   },
   (error) => {
-    console.log(error);
     return Promise.reject(error);
   }
 );
 
 const MyApp = (props) => {
-  const history = useHistory();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [publicKey, setPublicKey] = useState('');
   const [userAccount, setUserAccount] = useState('');
@@ -65,40 +59,11 @@ const MyApp = (props) => {
   const [role, setRole] = useState('');
 
   useEffect(() => {
-    // const uAccount = localStorage.getItem('userAccount');
-    // const pubKey = localStorage.getItem('publicKey');
-    // const token = localStorage.getItem('token');
-
-    // if (uAccount && pubKey && token) {
-    //   setToken(token);
-    //   setIsAuthenticated(true);
-    //   setPublicKey(pubKey);
-    //   setUserAccount(uAccount);
-    //   axios.defaults.headers.common['Authorization'] = token;
-    //   axios.interceptors.response.use(
-    //     (response) => {
-    //       console.log(response);
-    //       return response;
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //       return Promise.reject(error);
-    //     }
-    //   );
-    // }
-
-    console.log(props.ual.activeUser);
     if (props.ual.activeUser !== null) {
       if (props.ual.activeUser.accountName !== null) {
         axios
           .post('/login', { username: props.ual.activeUser.accountName })
           .then((res) => {
-            console.log(res);
-            setRole(res.data.role.toLowerCase());
-            setToken(res.data.token);
-            setIsAuthenticated(true);
-            setPublicKey(props.ual.activeUser.pubKeys[0]);
-            setUserAccount(props.ual.activeUser.accountName);
             axios.defaults.headers.common['Authorization'] = res.data.token;
             axios.interceptors.response.use(
               (response) => {
@@ -110,6 +75,11 @@ const MyApp = (props) => {
                 return Promise.reject(error);
               }
             );
+            setRole(res.data.role.toLowerCase());
+            setToken(res.data.token);
+            setIsAuthenticated(true);
+            setPublicKey(props.ual.activeUser.pubKeys[0]);
+            setUserAccount(props.ual.activeUser.accountName);
           });
       }
     }
@@ -124,26 +94,6 @@ const MyApp = (props) => {
             userAccount,
             publicKey,
             token,
-            // authenticate: (data) => {
-            //   setUserAccount(data.userAccount);
-            //   setPublicKey(data.publicKey);
-            //   setToken(data.token);
-            //   setIsAuthenticated(true);
-            //   localStorage.setItem('token', data.token);
-            //   localStorage.setItem('userAccount', data.userAccount);
-            //   localStorage.setItem('publicKey', data.publicKey);
-            //   axios.defaults.headers.common['Authorization'] = data.token;
-            //   axios.interceptors.response.use(
-            //     (response) => {
-            //       console.log(response);
-            //       return response;
-            //     },
-            //     (error) => {
-            //       console.log(error);
-            //       return Promise.reject(error);
-            //     }
-            //   );
-            // },
             logout: () => {
               props.ual.logout();
               setIsAuthenticated(false);
