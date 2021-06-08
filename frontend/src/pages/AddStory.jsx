@@ -118,7 +118,13 @@ const AddStory = () => {
         <JoditEditor
           ref={editorRef}
           value={editorState}
-          config={{ readonly: false }}
+          config={{
+            readonly: false,
+            askBeforePasteFromWord: false,
+            askBeforePasteHTML: false,
+            defaultActionOnPaste: 'insert_as_html',
+            insertImageAsBase64URI: true,
+          }}
           tabIndex={1}
           onBlur={(newContent) => {
             setEditorState(newContent);

@@ -99,10 +99,16 @@ const verifyUserAssets = async (req, res) => {
           }
         }
 
-        if (approvedAssets.length < requiredAssetIds.length) {
-          res.status(401).json({ deniedAssets });
-        } else {
+        // if (approvedAssets.length < requiredAssetIds.length) {
+        //   res.status(401).json({ deniedAssets });
+        // } else {
+        //   res.status(200).json({ Story: storyContent });
+        // }
+
+        if (approvedAssets.length > 0) {
           res.status(200).json({ Story: storyContent });
+        } else {
+          res.status(401).json({ deniedAssets: requiredAssetIds });
         }
       })
       .catch((err) => {

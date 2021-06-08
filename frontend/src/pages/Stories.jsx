@@ -117,7 +117,7 @@ const Stories = () => {
                       <>
                         {selectedStory.assetIds && (
                           <>
-                            {selectedStory.assetIds.split(',').length <= 1
+                            {/* {selectedStory.assetIds.split(',').length <= 1
                               ? 'Oops! You do not have the required asset for this story.'
                               : `Oops! This story requires
                     ${selectedStory.assetIds.split(',').length}
@@ -125,7 +125,8 @@ const Stories = () => {
                     ${
                       selectedStory.assetIds.split(',').length -
                       deniedAssets.length
-                    }.`}
+                    }.`} */}
+                            Oops! You do not have any of the required assets.
                           </>
                         )}
                       </>
