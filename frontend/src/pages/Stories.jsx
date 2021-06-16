@@ -138,7 +138,7 @@ const Stories = () => {
                   {deniedAssets.map((assetId, idx) => {
                     return (
                       <button
-                        className={`bg-primary py-4 px-10 mt-6 rounded-lg uppercase text-white focus:outline-none ${
+                        className={`bg-primary py-4 px-10 mx-4 mt-6 rounded-lg uppercase text-white focus:outline-none ${
                           idx !== deniedAssets.length - 1 && idx !== 0 && 'mx-4'
                         }`}
                         onClick={() =>

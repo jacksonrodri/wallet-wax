@@ -76,9 +76,17 @@ const verifyUserAssets = async (req, res) => {
     assetIdDb = stories.assetIds;
     storyContent = stories.content;
 
+    let requiredAssetIdsCommaSeparated = [];
+
+    requiredAssetIds.forEach((assetId) => {
+      if (assetId !== '') {
+        requiredAssetIdsCommaSeparated.push(assetId);
+      }
+    });
+
     axios
       .get(
-        `https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`
+        `https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&ids=${requiredAssetIdsCommaSeparated}&page=1&limit=100&order=desc&sort=asset_id`
       )
       .then((response) => {
         const { data } = response.data;
@@ -117,7 +125,6 @@ const verifyUserAssets = async (req, res) => {
           .json({ message: 'There is some issue on atomic assets server.' });
       });
   } catch (err) {
-    console.log(err);
     res.send('Error' + err);
   }
 };

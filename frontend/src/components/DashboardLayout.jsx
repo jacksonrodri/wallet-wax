@@ -9,7 +9,7 @@ const DashboardLayout = ({ children, role }) => {
   const location = useLocation();
 
   return (
-    <div>
+    <div className="pb-36 -mb-20">
       <div className="px-36 shadow-xl">
         <div className="flex justify-between py-10 items-center">
           <nav>

@@ -52,7 +52,6 @@ const getAllAdmins = async (req, res) => {
     const user = await users.find();
     res.status(200).json(user);
   } catch (err) {
-    console.log(err);
     res.status(401).json({ Message: err });
   }
 };

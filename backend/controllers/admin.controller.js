@@ -1,10 +1,18 @@
 const Story = require('../models/stories');
 
 const addStory = async (req, res) => {
+  const assetIdsArr = req.body.assetIds.split(',');
+  let cleanAssetIds = [];
+  assetIdsArr.forEach((assetId) => {
+    if (assetId !== '') {
+      cleanAssetIds.push(assetId);
+    }
+  });
+
   const newStory = new Story({
     name: req.body.name,
     content: req.body.content,
-    assetIds: req.body.assetIds,
+    assetIds: cleanAssetIds.join(','),
     description: req.body.description,
     image: req.file.originalname,
   });
@@ -40,10 +48,19 @@ const editStory = async (req, res) => {
     const storyId = req.params.storyid;
 
     const { name, content, assetIds, description } = req.body;
+
+    const assetIdsArr = req.body.assetIds.split(',');
+    let cleanAssetIds = [];
+    assetIdsArr.forEach((assetId) => {
+      if (assetId !== '') {
+        cleanAssetIds.push(assetId);
+      }
+    });
+
     const fields = {
       name,
       content,
-      assetIds,
+      assetIds: cleanAssetIds.join(','),
       description,
     };
 
@@ -63,7 +80,6 @@ const adminGetStory = async (req, res) => {
     const story = await Story.findOne({ _id: req.params.storyId });
     res.json(story);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: 'Something went wrong.' });
   }
 };

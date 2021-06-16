@@ -5,7 +5,6 @@ const getAllStories = async (req, res) => {
     const stories = await Story.find();
     res.status(200).json(stories);
   } catch (err) {
-    console.log(err);
     res.status(401).json({ Message: err });
   }
 };
