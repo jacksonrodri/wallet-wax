@@ -1,23 +1,24 @@
 const Story = require('../models/stories');
 
 const addStory = async (req, res) => {
-  const assetIdsArr = req.body.assetIds.split(',');
-  let cleanAssetIds = [];
-  assetIdsArr.forEach((assetId) => {
+  const templateIdsArr = req.body.assetIds.split(',');
+  let cleanTemplateIds = [];
+  templateIdsArr.forEach((assetId) => {
     if (assetId !== '') {
-      cleanAssetIds.push(assetId);
+      cleanTemplateIds.push(assetId);
     }
   });
 
   const newStory = new Story({
     name: req.body.name,
     content: req.body.content,
-    assetIds: cleanAssetIds.join(','),
+    templateIds: cleanTemplateIds.join(','),
     description: req.body.description,
     image: req.file.originalname,
   });
   try {
     const S = await newStory.save();
+    console.log(S)
     res.json(S);
   } catch (err) {
     res.status(401).json({ message: err });
@@ -47,20 +48,20 @@ const editStory = async (req, res) => {
   try {
     const storyId = req.params.storyid;
 
-    const { name, content, assetIds, description } = req.body;
+    const { name, content, templateIds, description } = req.body;
 
-    const assetIdsArr = req.body.assetIds.split(',');
-    let cleanAssetIds = [];
-    assetIdsArr.forEach((assetId) => {
+    const templateIdsArr = req.body.assetIds.split(',');
+    let cleanTemplateIds = [];
+    templateIdsArr.forEach((assetId) => {
       if (assetId !== '') {
-        cleanAssetIds.push(assetId);
+        cleanTemplateIds.push(assetId);
       }
     });
 
     const fields = {
       name,
       content,
-      assetIds: cleanAssetIds.join(','),
+      templateIds: cleanTemplateIds.join(','),
       description,
     };
 

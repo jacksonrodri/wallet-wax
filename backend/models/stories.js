@@ -9,7 +9,7 @@ const storySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    assetIds: {
+    templateIds: {
         type: String,
         required: true
     },
