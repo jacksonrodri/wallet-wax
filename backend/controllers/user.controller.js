@@ -125,7 +125,7 @@ const verifyUserAssets = async (req, res) => {
           if (approvedAssets.length > 0) {
             res.status(200).json({ Story: storyContent });
           } else {
-            res.status(401).json({ deniedAssets: requiredAssetIds });
+            res.status(401).json({ deniedAssets: requiredAssetIdsCommaSeparated });
           }
         })
         .catch((err) => {
