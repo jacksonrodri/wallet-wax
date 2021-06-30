@@ -10,7 +10,7 @@ const AddStory = () => {
 
   const [formData, setFormData] = useState({
     name: '',
-    assetIds: '',
+    templateIds: '',
     description: '',
     content: '',
     image: '',
@@ -18,7 +18,7 @@ const AddStory = () => {
 
   const [errorMessages, setErrorMessages] = useState({
     name: '',
-    assetIds: '',
+    templateIds: '',
     description: '',
     content: '',
     image: '',
@@ -29,7 +29,7 @@ const AddStory = () => {
     if (handleValidations()) {
       let data = new FormData();
       data.append('name', formData.name);
-      data.append('assetIds', formData.assetIds);
+      data.append('templateIds', formData.templateIds);
       data.append('description', formData.description);
       // data.append('content', formData.content);
       data.append('content', editorState);
@@ -44,15 +44,15 @@ const AddStory = () => {
   const handleValidations = () => {
     let resolve = true;
 
-    const { name, assetIds, description, image } = formData;
+    const { name, templateIds, description, image } = formData;
     let messages = {};
     if (name.length < 1) {
       resolve = false;
       messages.name = 'Name is required!';
     }
-    if (assetIds.length < 1) {
+    if (templateIds.length < 1) {
       resolve = false;
-      messages.assetIds = 'Asset Ids are required!';
+      messages.templateIds = 'Asset Ids are required!';
     }
     if (description.length < 1) {
       resolve = false;
@@ -92,15 +92,15 @@ const AddStory = () => {
       <div className="mt-8">
         <Input
           type="text"
-          name="assetIds"
-          placeholder="Asset id's separate by comma(,)"
+          name="templateIds"
+          placeholder="Template id's separate by comma(,)"
           onChange={(e) =>
-            setFormData({ ...formData, assetIds: e.target.value })
+            setFormData({ ...formData, templateIds: e.target.value })
           }
-          value={formData.assetIds}
+          value={formData.templateIds}
         />
 
-        <div className="text-red-700 mt-2">{errorMessages.assetIds}</div>
+        <div className="text-red-700 mt-2">{errorMessages.templateIds}</div>
       </div>
       <div className="my-8">
         <Input

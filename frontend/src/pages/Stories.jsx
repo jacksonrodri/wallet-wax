@@ -114,27 +114,12 @@ const Stories = () => {
 
                   <p className="text-red-700 text-center">
                     {selectedStory && (
-                      <>
-                        {selectedStory.assetIds && (
-                          <>
-                            {/* {selectedStory.assetIds.split(',').length <= 1
-                              ? 'Oops! You do not have the required asset for this story.'
-                              : `Oops! This story requires
-                    ${selectedStory.assetIds.split(',').length}
-                    assets, you only have
-                    ${
-                      selectedStory.assetIds.split(',').length -
-                      deniedAssets.length
-                    }.`} */}
-                            Oops! You do not have any of the required assets.
-                          </>
-                        )}
-                      </>
+                      <>Oops! You do not have any of the required assets.</>
                     )}
                   </p>
                 </div>
 
-                <div className="flex justify-between flex-wrap">
+                <div className="flex justify-between flex-wrap h-80 overflow-y-auto">
                   {deniedAssets.map((assetId, idx) => {
                     return (
                       <button

@@ -73,29 +73,30 @@ const verifyUserAssets = async (req, res) => {
 
     const requiredTemplateIds = stories.templateIds.split(',');
 
-    console.log("required Template Ids", requiredTemplateIds)
+    console.log('required Template Ids', requiredTemplateIds);
 
     storyContent = stories.content;
 
     let requiredAssetIdsCommaSeparated = [];
 
-    for(i = 0; i<requiredTemplateIds.length; i++){
+    for (i = 0; i < requiredTemplateIds.length; i++) {
       await axios
-      .get(
-        `https://wax.api.atomicassets.io/atomicassets/v1/assets?template_id=${requiredTemplateIds[i]}&page=1&limit=100000&order=desc&sort=asset_id`
-      ).then((response) => {
-        const { data } = response.data;
-        
-        for(j = 0; j< data.length; j++){
-          requiredAssetIdsCommaSeparated.push(data[j].asset_id)
-        }
-      })
-    }
-    
-      console.log("required Asset Ids", requiredAssetIdsCommaSeparated)
-      console.log("Reguired Asset Lenght", requiredAssetIdsCommaSeparated.length)
+        .get(
+          `https://wax.api.atomicassets.io/atomicassets/v1/assets?template_id=${requiredTemplateIds[i]}&page=1&limit=100000&order=desc&sort=asset_id`
+        )
+        .then((response) => {
+          const { data } = response.data;
 
-      axios
+          for (j = 0; j < data.length; j++) {
+            requiredAssetIdsCommaSeparated.push(data[j].asset_id);
+          }
+        });
+    }
+
+    console.log('required Asset Ids', requiredAssetIdsCommaSeparated);
+    console.log('Reguired Asset Lenght', requiredAssetIdsCommaSeparated.length);
+
+    axios
       .get(
         `https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`
       )
@@ -108,7 +109,7 @@ const verifyUserAssets = async (req, res) => {
           userAssetIds.push(data[i].asset_id);
         }
 
-        console.log("userAssetIds", userAssetIds)
+        console.log('userAssetIds', userAssetIds);
 
         let approvedAssets = [];
         let deniedAssets = [];
@@ -120,13 +121,15 @@ const verifyUserAssets = async (req, res) => {
           }
         }
 
-        console.log("approvedAssets", approvedAssets)
-        console.log("deniedAssets", deniedAssets)
+        console.log('approvedAssets', approvedAssets);
+        console.log('deniedAssets', deniedAssets);
 
         if (approvedAssets.length > 0) {
           res.status(200).json({ Story: storyContent });
         } else {
-          res.status(401).json({ deniedAssets: requiredAssetIdsCommaSeparated });
+          res
+            .status(401)
+            .json({ deniedAssets: requiredAssetIdsCommaSeparated });
         }
       })
       .catch((err) => {
@@ -134,7 +137,6 @@ const verifyUserAssets = async (req, res) => {
           .status(500)
           .json({ message: 'There is some issue on atomic assets server.' });
       });
-
   } catch (err) {
     res.send('Error' + err);
   }
