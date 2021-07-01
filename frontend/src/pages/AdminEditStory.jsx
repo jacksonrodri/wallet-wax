@@ -13,15 +13,15 @@ const EditStory = () => {
 
   const [formData, setFormData] = useState({
     name: '',
-    assetIds: '',
+    templateIds: '',
     description: '',
     content: '',
   });
 
   useEffect(() => {
     axios.get(`/admin/story/${id}`).then((response) => {
-      const { name, assetIds, description, content } = response.data;
-      setFormData({ ...formData, name, assetIds, description });
+      const { name, templateIds, description, content } = response.data;
+      setFormData({ ...formData, name, templateIds, description });
       setEditorState(content);
     });
   }, []);
@@ -31,7 +31,7 @@ const EditStory = () => {
 
     let data = new FormData();
     data.append('name', formData.name);
-    data.append('assetIds', formData.assetIds);
+    data.append('templateIds', formData.templateIds);
     data.append('description', formData.description);
     data.append('content', editorState);
 
@@ -60,12 +60,12 @@ const EditStory = () => {
       <div className="mt-8">
         <Input
           type="text"
-          name="assetIds"
-          placeholder="Asset id's separate by comma(,)"
+          name="templateIds"
+          placeholder="Template id's separate by comma(,)"
           onChange={(e) =>
-            setFormData({ ...formData, assetIds: e.target.value })
+            setFormData({ ...formData, templateIds: e.target.value })
           }
-          value={formData.assetIds}
+          value={formData.templateIds}
         />
       </div>
       <div className="my-8">
