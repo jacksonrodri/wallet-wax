@@ -64,16 +64,14 @@ const getUserAssets = async (req, res) => {
 };
 
 const verifyUserAssets = async (req, res) => {
-  const { authorization } = req.headers;
-  const { username } = jwt.verify(authorization, process.env.API_KEY);
-  storyId = req.params.id;
-
   try {
+    const { authorization } = req.headers;
+    const { username } = jwt.verify(authorization, process.env.API_KEY);
+    storyId = req.params.id;
+
     const stories = await Story.findOne({ _id: storyId });
 
     const requiredTemplateIds = stories.templateIds.split(',');
-
-    console.log('required Template Ids', requiredTemplateIds);
 
     storyContent = stories.content;
 
@@ -92,10 +90,6 @@ const verifyUserAssets = async (req, res) => {
           }
         });
     }
-
-    console.log('required Asset Ids', requiredAssetIdsCommaSeparated);
-    console.log('Reguired Asset Lenght', requiredAssetIdsCommaSeparated.length);
-
     axios
       .get(
         `https://wax.api.atomicassets.io/atomicassets/v1/assets?owner=${username}&page=1&limit=100&order=desc&sort=asset_id`
@@ -109,8 +103,6 @@ const verifyUserAssets = async (req, res) => {
           userAssetIds.push(data[i].asset_id);
         }
 
-        console.log('userAssetIds', userAssetIds);
-
         let approvedAssets = [];
         let deniedAssets = [];
         for (i = 0; i < requiredAssetIdsCommaSeparated.length; i++) {
@@ -120,9 +112,6 @@ const verifyUserAssets = async (req, res) => {
             deniedAssets.push(requiredAssetIdsCommaSeparated[i]);
           }
         }
-
-        console.log('approvedAssets', approvedAssets);
-        console.log('deniedAssets', deniedAssets);
 
         if (approvedAssets.length > 0) {
           res.status(200).json({ Story: storyContent });
@@ -138,7 +127,7 @@ const verifyUserAssets = async (req, res) => {
           .json({ message: 'There is some issue on atomic assets server.' });
       });
   } catch (err) {
-    res.send('Error' + err);
+    res.json({ message: 'Something went wrong!' });
   }
 };
 
