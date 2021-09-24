@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 
 const storyRoutes = require('./routes/story');
 const adminRoutes = require('./routes/admin');
-const superAdminRoutes = require('./routes/superAdmin');
+const superAdminRoutes = require('./routes/superadmin');
 
 const mongoose = require('mongoose');
 
