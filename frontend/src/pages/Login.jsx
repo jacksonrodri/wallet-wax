@@ -45,7 +45,7 @@ const Login = (props) => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="flex flex-col">
-        <h1 className="text-6xl text-white uppercase">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl text-white uppercase max-w-5xl px-4 text-center">
           Welcome to NFT Story Cards
         </h1>
         <button

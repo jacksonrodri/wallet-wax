@@ -51,12 +51,12 @@ const Stories = () => {
           {/* The Cost Of Magic */}
           {selectedStory.name || ''}
         </h2>
-        <div className="flex mt-8">
+        <div className="flex mt-8 flex-col sm:flex-row items-center">
           <img
             src={
               process.env.REACT_APP_API_URL + '/uploads/' + selectedStory.image
             }
-            className="w-3/12 h-60 rounded-lg"
+            className="w-3/12 h-60 rounded-lg book-image"
             alt=""
           />
           <div className="flex flex-col items-center flex-grow">
@@ -119,7 +119,7 @@ const Stories = () => {
                   </p>
                 </div>
 
-                <div className="flex justify-between flex-wrap h-80 overflow-y-auto">
+                <div className="flex justify-center flex-wrap h-80 overflow-y-auto">
                   {deniedAssets.map((assetId, idx) => {
                     return (
                       <button
@@ -149,17 +149,17 @@ const Stories = () => {
           </div>
         </div>
       </Modal>
-      <div className="mt-36">
-        <div className="mx-36">
-          <h2 className="text-5xl uppercase text-white text-center">
+      <div>
+        <div className="px-4">
+          <h2 className="text-4xl md:text-5xl uppercase text-white text-center max-w-3xl mx-auto">
             Welcome to NFT Story Cards
           </h2>
 
-          <div className="flex h-16 justify-end mt-28">
+          <div className="flex h-16 justify-center mt-16 md:mt-20 lg:mt-28">
             <input
               type="text"
               placeholder="search for story"
-              className="px-8 rounded-l-md shadow-lg w-96"
+              className="story-search px-8 rounded-l-md shadow-lg w-96"
               onChange={(e) => setSearchQuery(e.target.value)}
               value={searchQuery}
             />
@@ -175,7 +175,10 @@ const Stories = () => {
         <div className="mt-12 flex flex-wrap justify-center">
           {stories.map((story, index) => {
             return (
-              <div className="rounded-lg w-80 mx-14 mb-12 flex-initial relative">
+              <div
+                key={index}
+                className="story-item rounded-lg w-80 mx-0 sm:mx-14 mb-12 flex-initial relative"
+              >
                 <div className="absolute w-full h-full rounded-xl hover:bg-black hover:bg-opacity-80 hover:opacity-100 opacity-0 cursor-pointer flex justify-center items-center transition duration-500 ease-in-out">
                   <button
                     className="border-2 border-white rounded-xl uppercase text-white py-3 px-6 focus:outline-none bg-gray-800 transition duration-500 ease-in-out"
@@ -192,7 +195,7 @@ const Stories = () => {
                   alt=""
                   className="rounded-t-xl w-full h-96"
                 />
-                <div className="h-16 bg-secondary rounded-b-xl text-white uppercase flex justify-center items-center">
+                <div className="h-16 bg-secondary rounded-b-xl text-white uppercase flex justify-center items-center p-2">
                   <p className="hover:text-gray-300">{story.name}</p>
                 </div>
               </div>

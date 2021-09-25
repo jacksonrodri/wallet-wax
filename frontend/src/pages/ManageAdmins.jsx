@@ -31,7 +31,7 @@ const ManageAdmins = () => {
   };
 
   return (
-    <div className="mt-24 w-6/12 mx-auto text-white text-2xl pb-10">
+    <div className="w-6/12 mx-auto text-white text-2xl pb-10">
       <div className="flex h-16 justify-end mt-28 mb-12">
         <input
           type="text"

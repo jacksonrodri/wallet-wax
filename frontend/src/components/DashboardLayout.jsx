@@ -13,7 +13,7 @@ const DashboardLayout = ({ children, role }) => {
   const location = useLocation();
 
   return (
-    <div className="pb-36 -mb-20">
+    <div className="-mb-20">
       <div className="shadow-xl">
         <div className="container mx-auto">
           <Header
@@ -23,7 +23,9 @@ const DashboardLayout = ({ children, role }) => {
           />
         </div>
       </div>
-      {children}
+      <div className="py-16 md:py-24 lg:py-36">
+        {children}
+      </div>
     </div>
   );
 };

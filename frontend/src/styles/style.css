@@ -1,3 +1,19 @@
 .full-story-wrapper {
   max-width: 950px
 }
+
+@media screen and (max-width: 639px) {
+  .book-image {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .story-search {
+    width: 10rem;
+  }
+
+  .story-item {
+    width: 18rem;
+  }
+}

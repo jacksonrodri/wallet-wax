@@ -9,10 +9,9 @@ module.exports = {
         beige: '#DFB59D',
         hover: '#F2D6AF',
       },
-    },
+    }
   },
   variants: {
     extend: {},
-  },
-  plugins: [],
+  }
 };
