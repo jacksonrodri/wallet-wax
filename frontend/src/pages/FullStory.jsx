@@ -12,11 +12,13 @@ const FullStory = () => {
   }, [id]);
 
   return (
-    <div
-      className="mt-24 w-6/12 mx-auto text-2xl border p-12 rounded-xl bg-hover shadow-xl text-black"
-      style={{ minHeight: '600px' }}
-      dangerouslySetInnerHTML={{ __html: story }}
-    ></div>
+    <div class="full-story-wrapper mx-auto p-4">
+      <div
+        className="mt-4 md:mt-8 lg:mt-24 text-2xl border p-8 md:p-12 rounded-xl bg-hover shadow-xl text-black"
+        style={{ minHeight: '600px' }}
+        dangerouslySetInnerHTML={{ __html: story }}
+      ></div>
+    </div>
   );
 };
 

@@ -26,6 +26,7 @@ import AdminStories from './pages/AdminStories';
 import AdminEditStory from './pages/AdminEditStory';
 
 import ManageAdmins from './pages/ManageAdmins';
+import './styles/style.css';
 
 dotenv.config();
 
