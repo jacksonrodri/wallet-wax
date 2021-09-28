@@ -46,7 +46,7 @@ const Stories = () => {
 
   return (
     <>
-      <Modal show={showModal}>
+      <Modal show={showModal} setShowModal={setShowModal}>
         <h2 className="text-3xl text-primary uppercase text-center">
           {/* The Cost Of Magic */}
           {selectedStory.name || ''}
@@ -139,13 +139,6 @@ const Stories = () => {
                 </div>
               </>
             )}
-
-            <p
-              className="text-xs text-primary uppercase mt-4 cursor-pointer"
-              onClick={() => setShowModal(false)}
-            >
-              Cancel
-            </p>
           </div>
         </div>
       </Modal>

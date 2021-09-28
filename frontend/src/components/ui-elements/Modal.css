@@ -2,4 +2,12 @@
   max-width: 800px;
   max-height: 96vh;
   overflow: auto;
+  position: relative;
+}
+
+.modal-close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
 }
